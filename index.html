@@ -1,0 +1,622 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>The Cierto 27 Ultraskate Training</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Big+Shoulders+Display:wght@700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
+<style>
+/* Layout: one-column timing sheet. Big day countdown top-left, sticky tab bar, ruled rows instead of stacked cards. */
+:root{
+  --bg:#e3e5e1; --surface:#f0f1ee; --ink:#14181b; --muted:#566067; --line:#c3c8c3; --track:#d1d5d0;
+  --accent:#0a5c7a; --on-accent:#ffffff; --hot:#b13d06; --ok:#1d7443; --warn:#8f6200; --bad:#b3261e;
+  --cp:#6f9275; --on-cp:#0d1710;
+  --display:'Big Shoulders Display','Arial Narrow',Impact,sans-serif;
+  --body:'Barlow',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --mono:'IBM Plex Mono',ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#101416; --surface:#192024; --ink:#e8ecea; --muted:#97a3a8; --line:#2b3438; --track:#262f33;
+    --accent:#52b8d8; --on-accent:#06161c; --hot:#ff8248; --ok:#4cc27d; --warn:#e0b341; --bad:#ff7b72;
+    --cp:#4a6b52; --on-cp:#eef5ef;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#101416; --surface:#192024; --ink:#e8ecea; --muted:#97a3a8; --line:#2b3438; --track:#262f33;
+  --accent:#52b8d8; --on-accent:#06161c; --hot:#ff8248; --ok:#4cc27d; --warn:#e0b341; --bad:#ff7b72;
+  --cp:#4a6b52; --on-cp:#eef5ef;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{
+  background:var(--bg); color:var(--ink); font:16px/1.5 var(--body);
+  padding-left:max(16px,env(safe-area-inset-left,0px));
+  padding-right:max(16px,env(safe-area-inset-right,0px));
+  padding-block:0 48px;
+}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.wrap{max-width:720px;margin:0 auto}
+h1,h2,h3,p,ul,ol,dl,dd{margin:0}
+ul,ol{padding:0;list-style:none}
+button,input{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+
+/* hero */
+.hero{padding-top:20px;display:flex;flex-direction:column;gap:14px}
+.eyebrow{font:500 .75rem/1.4 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.hero-grid{display:flex;flex-wrap:wrap;gap:12px 32px;align-items:flex-end}
+.count{font:800 clamp(5rem,26vw,8.5rem)/.82 var(--display);letter-spacing:-.01em;font-variant-numeric:tabular-nums}
+.count-label{font:700 1rem/1.2 var(--display);letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:6px}
+.facts{display:grid;grid-template-columns:repeat(2,minmax(0,auto));gap:10px 28px}
+.facts div{min-width:0}
+.facts dt{font:500 .7rem/1.2 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.facts dd{font:700 1.6rem/1.1 var(--display);letter-spacing:.01em}
+.strip{display:grid;grid-template-columns:repeat(17,minmax(0,1fr));gap:3px}
+.strip i{display:block;height:10px;background:var(--track)}
+.strip i.part{background:color-mix(in srgb,var(--accent) 45%,var(--track))}
+.strip i.full{background:var(--accent)}
+.strip i.now{outline:2px solid var(--ink);outline-offset:1px}
+.countbtn{background:none;border:0;padding:0;color:inherit;cursor:pointer;text-align:left;display:block;border-bottom:4px solid transparent}
+.countbtn:hover,.countbtn[aria-expanded="true"]{border-bottom-color:var(--accent)}
+.count-hint{font:500 .7rem/1.3 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-top:4px}
+.sync{font:400 .72rem/1.3 var(--mono);color:var(--muted)}
+
+/* tabs */
+.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);display:flex;gap:0;margin-top:12px;border-bottom:2px solid var(--ink)}
+.tab{flex:1;min-width:0;background:none;border:0;padding:12px 4px;font:700 1.05rem/1 var(--display);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);cursor:pointer}
+.tab[aria-current="page"]{color:var(--on-accent);background:var(--ink)}
+.tab[aria-current="page"]{color:var(--bg)}
+#view{padding-top:20px;display:flex;flex-direction:column;gap:24px}
+
+/* common */
+.sec-title{font:700 1.4rem/1.1 var(--display);letter-spacing:.04em;text-transform:uppercase}
+.sub{color:var(--muted);font-size:.9rem}
+.chip{display:inline-block;font:500 .72rem/1 var(--mono);letter-spacing:.04em;text-transform:uppercase;padding:4px 7px;border:1px solid currentColor}
+.chip.ok{color:var(--ok)} .chip.warn{color:var(--warn)} .chip.bad{color:var(--bad)} .chip.hot{color:var(--hot)}
+.btn{background:var(--accent);color:var(--on-accent);border:2px solid var(--accent);padding:10px 16px;font:700 1rem/1 var(--display);letter-spacing:.1em;text-transform:uppercase;cursor:pointer;min-height:44px}
+.btn.ghost{background:none;color:var(--ink);border-color:var(--ink)}
+.btn.small{padding:8px 12px;min-height:38px;font-size:.9rem}
+.banner{border:2px solid var(--bad);padding:12px 14px;color:var(--ink)}
+.banner b{color:var(--bad)}
+
+/* session card */
+.card{background:var(--surface);padding:18px 16px;display:flex;flex-direction:column;gap:14px;border:1px solid var(--line)}
+.card .lbl{font:500 .75rem/1.3 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--hot)}
+.card .title{font:800 2.6rem/.95 var(--display);letter-spacing:.005em;text-wrap:balance}
+.meta{display:flex;flex-wrap:wrap;gap:6px 14px;font:500 .85rem/1.3 var(--mono);color:var(--muted)}
+.how{max-width:62ch}
+.note{max-width:62ch;border-top:1px solid var(--line);padding-top:10px}
+.log{display:flex;flex-direction:column;gap:14px;border-top:1px solid var(--line);padding-top:14px}
+.fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.field{display:flex;flex-direction:column;gap:4px;min-width:0}
+.field.wide{grid-column:1/-1}
+label,legend{font:500 .72rem/1.2 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding:0}
+input[type=number],input[type=text],input[type=date]{background:var(--bg);border:1px solid var(--ink);padding:10px;width:100%;min-height:44px;border-radius:0}
+fieldset{border:0;margin:0;padding:0;min-width:0}
+.seg{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.seg input{position:absolute;opacity:0;pointer-events:none}
+.seg label{font:700 .95rem/1 var(--display);letter-spacing:.08em;color:var(--ink);padding:11px 14px;border:1px solid var(--ink);cursor:pointer;min-height:44px;display:flex;align-items:center}
+.seg input:checked+label{background:var(--ink);color:var(--bg)}
+.seg input:focus-visible+label{outline:2px solid var(--accent);outline-offset:2px}
+.err{color:var(--bad);font-size:.9rem}
+.sum{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.sum div{min-width:0}
+.sum dt{font:500 .68rem/1.2 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.sum dd{font:700 1.7rem/1.1 var(--display)}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+.verdict{border:1px solid currentColor;padding:10px 12px}
+.verdict.ok{color:var(--ok)} .verdict.warn{color:var(--warn)} .verdict.bad{color:var(--bad)}
+.verdict p{color:var(--ink)}
+
+/* ruled lists */
+.rows{border-top:2px solid var(--ink)}
+.rows>li{border-bottom:1px solid var(--line)}
+.rowbtn{width:100%;display:grid;grid-template-columns:3.2rem minmax(0,1fr) auto;gap:10px;align-items:center;text-align:left;background:none;border:0;padding:12px 2px;cursor:pointer}
+.rowbtn .d{font:700 1.2rem/1 var(--display);letter-spacing:.06em;text-transform:uppercase}
+.rowbtn .t{min-width:0}
+.rowbtn .t small{display:block;color:var(--muted);font:400 .8rem/1.3 var(--mono)}
+.rowbtn .s{font:500 .85rem/1 var(--mono);text-align:right}
+.rowbtn .s.ok{color:var(--ok)} .rowbtn .s.miss{color:var(--hot)}
+
+/* plan */
+.cp{display:flex;flex-direction:column;gap:6px;padding:14px 0;border-bottom:1px solid var(--line)}
+.cp h3{font:700 1.2rem/1.1 var(--display);letter-spacing:.04em;text-transform:uppercase}
+.cp .when{font:500 .75rem/1.3 var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.bars{display:flex;align-items:flex-end;gap:3px;height:120px;border-bottom:2px solid var(--ink)}
+.bcol{flex:1;min-width:0;height:100%;display:flex;flex-direction:column;justify-content:flex-end}
+.bar{background:var(--track);position:relative;display:flex;align-items:flex-end}
+.bar i{display:block;width:100%;background:var(--accent)}
+.bcol.now .bar{outline:2px solid var(--ink)}
+.bnums{display:flex;gap:3px;margin-top:4px}
+.bnums span{flex:1;min-width:0;text-align:center;font:400 .62rem/1 var(--mono);color:var(--muted)}
+.phase{font:700 1.15rem/1.1 var(--display);letter-spacing:.06em;text-transform:uppercase;padding:18px 0 8px}
+.phase span{color:var(--muted);font-weight:700}
+details.wk{border-bottom:1px solid var(--line)}
+details.wk>summary{list-style:none;display:grid;grid-template-columns:3.2rem minmax(0,1fr) auto;gap:10px;align-items:center;padding:12px 2px;cursor:pointer}
+details.wk>summary::-webkit-details-marker{display:none}
+.wn{font:800 1.5rem/1 var(--display)}
+.wmid b{display:block;font:700 1.05rem/1.1 var(--display);letter-spacing:.03em}
+.wmid small{color:var(--muted);font:400 .78rem/1.3 var(--mono)}
+.wm{font:500 .85rem/1 var(--mono);text-align:right}
+details.wk[open]>summary{background:color-mix(in srgb,var(--ink) 6%,transparent)}
+details.wk .rows{border-top:1px solid var(--line)}
+.cpw>summary,details.wk.cpw[open]>summary{background:var(--cp);color:var(--on-cp)}
+details.wk.cpw{border-bottom:2px solid var(--cp)}
+.cpw .wmid small,.cpw .wm{color:var(--on-cp)}
+.cpw .wmid small{opacity:.85}
+.cpbox{background:color-mix(in srgb,var(--cp) 16%,var(--bg));padding:14px 12px;display:flex;flex-direction:column;gap:8px}
+.cpbox h3{font:700 1.2rem/1.1 var(--display);letter-spacing:.04em;text-transform:uppercase}
+.cpbox .cpk{font:500 .72rem/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.cpbox .when{font:500 .75rem/1.3 var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.wknote{padding:8px 2px 4px;color:var(--muted);font-size:.9rem}
+
+/* race */
+.pace{display:flex;flex-direction:column;gap:8px}
+.pace input[type=range]{width:100%;accent-color:var(--accent);min-height:32px}
+.paceval{display:flex;flex-wrap:wrap;gap:6px 18px;align-items:baseline}
+.big{font:800 3.2rem/.9 var(--display);font-variant-numeric:tabular-nums}
+.big small{font:700 1rem/1 var(--display);letter-spacing:.1em;color:var(--muted);text-transform:uppercase;margin-left:4px}
+.chartwrap{border:1px solid var(--line);background:var(--surface);padding:8px 4px 4px}
+.chartwrap svg{display:block;width:100%;height:auto;max-width:100%}
+.ax{stroke:var(--line);stroke-width:1;fill:none}
+.axk{stroke:var(--ink);stroke-width:1.5;fill:none}
+.gt{fill:var(--muted);font:10px var(--mono)}
+.gt.end{fill:var(--ink);font-weight:500}
+.gt.hot{fill:var(--hot)}
+.ln{stroke:var(--accent);stroke-width:2.5;fill:none;stroke-linejoin:round}
+.tg{stroke:var(--hot);stroke-width:1.5;stroke-dasharray:5 4;fill:none}
+.zz{fill:var(--track)}
+.legend{font:400 .75rem/1.3 var(--mono);color:var(--muted);padding:4px 8px 6px}
+.sched li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;padding:10px 2px;align-items:baseline}
+.sched .tm{font:400 .78rem/1.3 var(--mono);color:var(--muted);display:block}
+.sched .lb{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
+.sched .k{font:700 .8rem/1 var(--display);letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+.sched .sleep .k{color:var(--hot)}
+.sched .pit .k,.sched .meal .k{color:var(--muted)}
+.sched .sleep{background:color-mix(in srgb,var(--hot) 8%,transparent)}
+.sched .mi{font:500 1rem/1 var(--mono);text-align:right}
+.sched .c .k{color:var(--hot)}
+.sched .c{background:color-mix(in srgb,var(--hot) 9%,transparent)}
+.zt{fill:color-mix(in srgb,var(--hot) 32%,var(--bg))}
+.sched .pt .k{color:var(--muted)}
+.sched .pt{background:color-mix(in srgb,var(--track) 35%,transparent)}
+.sched .nt{font:500 .68rem/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--hot)}
+ul.plain{display:flex;flex-direction:column;gap:8px;padding-left:1.1rem;list-style:disc;max-width:62ch}
+.kit li{border-bottom:1px solid var(--line)}
+.kit label{display:flex;gap:12px;align-items:center;padding:12px 2px;font:400 1rem/1.3 var(--body);letter-spacing:0;text-transform:none;color:var(--ink);cursor:pointer}
+.kit input{width:22px;height:22px;accent-color:var(--accent);flex:none}
+.kit input:checked+span{color:var(--muted);text-decoration:line-through}
+
+/* log */
+.stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px 20px}
+.stats dt{font:500 .7rem/1.2 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.stats dd{font:800 2.4rem/1 var(--display);font-variant-numeric:tabular-nums}
+.empty{padding:18px 0;border-top:2px solid var(--ink);max-width:56ch}
+.goalrow{display:flex;gap:8px;flex-wrap:wrap}
+@media (min-width:560px){
+  .stats{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .card .title{font-size:3.2rem}
+}
+@media (prefers-reduced-motion: reduce){*{scroll-behavior:auto!important}}
+.gate{position:fixed;inset:0;z-index:50;background:var(--bg);overflow:auto;display:flex;align-items:center;justify-content:center;padding:24px max(16px,env(safe-area-inset-right,0px)) 24px max(16px,env(safe-area-inset-left,0px))}
+.gate-card{width:100%;max-width:420px;display:flex;flex-direction:column;gap:18px}
+.gate-title{font:800 clamp(2rem,9vw,3rem)/.95 var(--display);margin:0;text-wrap:balance}
+</style>
+</head><body>
+
+<div class="gate" id="gate"><form class="gate-card" id="gate-form" novalidate><p class="eyebrow">Relay Team Racing · Feb 17–18, 2027</p><h1 class="gate-title">The Cierto 27 Ultraskate Training</h1><div class="field"><label for="gate-pw">Password</label><input type="password" id="gate-pw" autocomplete="off"></div><p class="err" id="gate-err" hidden></p><div class="actions"><button class="btn" type="submit">Unlock</button></div></form></div>
+<div class="wrap" id="app" hidden>
+  <header class="hero">
+    <p class="eyebrow">24-Hour Ultraskate · Relay Team Racing · Homestead-Miami Speedway · Feb 17–18, 2027</p>
+    <div class="hero-grid">
+      <div>
+        <button class="count countbtn" id="h-days" type="button" data-act="admin" aria-expanded="false" aria-controls="admin">117</button>
+        <div class="count-label" id="h-label">days to the start</div>
+        <div class="count-hint">Tap the number to edit team names</div>
+      </div>
+      <dl class="facts" id="h-facts"></dl>
+    </div>
+    <div class="strip" id="strip" aria-hidden="true"></div>
+    <p class="sync" id="sync"></p>
+    <section class="card" id="admin" hidden></section>
+  </header>
+  <nav class="tabs" id="tabs" aria-label="Sections"></nav>
+  <main id="view"></main>
+</div>
+
+<script>
+(function(){
+"use strict";
+var $=function(s){return document.querySelector(s)};
+var esc=function(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})};
+var DAY=864e5;
+var addDays=function(d,n){var x=new Date(d.getFullYear(),d.getMonth(),d.getDate()+n);return x};
+var sameDay=function(a,b){return a.getFullYear()===b.getFullYear()&&a.getMonth()===b.getMonth()&&a.getDate()===b.getDate()};
+var fmtD=function(d){return d.toLocaleDateString('en-US',{month:'short',day:'numeric'})};
+var fmtDW=function(d){return d.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'})};
+var dur=function(m){return m>=60?Math.floor(m/60)+'h'+(m%60?' '+(m%60)+'m':''):m+' min'};
+var today=function(){var n=new Date();return new Date(n.getFullYear(),n.getMonth(),n.getDate())};
+
+/* ---------- plan data ---------- */
+var START=new Date(2026,9,26), RACE=new Date(2027,1,17);
+var DOW={Mon:0,Tue:1,Wed:2,Thu:3,Fri:4,Sat:5,Sun:6};
+var PHASE={1:'Easy start',2:'Base',3:'Relay-specific',4:'Taper'};
+var T={
+  easy:{l:'Easy ride',mph:5,how:'Relaxed effort on flat, smooth pavement.'},
+  steady:{l:'Steady ride',mph:6,how:'Comfortably hard. Smooth and even, no sprints.'},
+  pace:{l:'Race-pace ride',mph:6.6,how:'Warm up 15 minutes easy. Then hold your target moving pace, about 6.6 mph, evenly. Cool down 10 minutes.'},
+  long:{l:'Long ride',mph:5,how:'Easy effort. Eat and drink on a clock, and wear the kit you plan to race in.'},
+  relay:{l:'Relay simulation',mph:6.4,how:'Practice the race rhythm at race pace. Early on: skate 1 hour, rest 1 hour. Later: skate 2 hours, rest 2 hours. Use the rests to eat, stretch and lie down, as you will on race day.'},
+  test:{l:'1-hour pace test',mph:8,how:'Warm up 10 minutes easy, then skate 60 minutes as fast as you can hold evenly. Flat, smooth route you can reuse. Log the distance.'},
+  race:{l:'Race day',mph:0,how:'8:00 AM start, 8:00 AM finish. Open the Race day tab for the shift schedule.'}
+};
+var RAW=[
+ [1,1,'First rides',[['Mon','easy',45,'Stop the ride if anything aches or your stride changes.'],['Wed','easy',60],['Fri','easy',60]]],
+ [2,1,'Add time slowly',[['Mon','easy',60],['Wed','easy',75],['Fri','easy',75]]],
+ [3,1,'Pace test week',[['Mon','easy',60],['Wed','easy',60],['Fri','test',60,'Fresh legs. Pick a route you can reuse for a repeat test later.'],['Sun','long',90,'Easy. Take the time to settle in.']]],
+ [4,2,'Build begins',[['Mon','easy',90],['Wed','steady',60],['Fri','easy',90],['Sat','long',150]]],
+ [5,2,'Build',[['Mon','easy',90],['Wed','steady',75],['Fri','easy',90],['Sat','long',180,'Practice eating something small every 30 minutes.']]],
+ [6,2,'Recovery week',[['Mon','easy',75],['Wed','steady',45],['Fri','easy',75],['Sat','long',120]]],
+ [7,2,'Pace work begins',[['Mon','easy',105],['Wed','pace',75,'Two 20-minute blocks at race pace, with 5 minutes easy between them.'],['Fri','easy',105],['Sat','long',210]]],
+ [8,2,'Pace work',[['Mon','easy',120],['Wed','pace',90,'Two 30-minute blocks at race pace, with 5 minutes easy between them.'],['Fri','easy',120],['Sat','long',240,'Four hours. Note any ache after hour 3.']]],
+ [9,2,'Recovery and checkpoint',[['Mon','easy',75],['Wed','steady',45],['Fri','easy',75],['Sat','long',180,'Holiday week. Shift days around if you need to.']]],
+ [10,3,'Relay-specific starts',[['Mon','easy',120],['Wed','pace',90,'Race pace for the whole session after warming up.'],['Fri','easy',90],['Sat','relay',240,'Opening pattern of the race: skate 1 hour, rest 1 hour, four times (about 7 hours start to finish). Use the rests to eat, stretch and stay loose.']]],
+ [11,3,'Night skating',[['Mon','easy',120],['Wed','pace',90],['Fri','easy',90],['Sat','relay',240,'Later-race pattern: skate 2 hours, rest 2 hours, skate 2 hours. Time it so the second block ends after dark. Lights on, and practice lying down and waking up.']]],
+ [12,3,'Recovery week',[['Mon','easy',90],['Wed','steady',45],['Fri','easy',90],['Sat','long',180]]],
+ [13,3,'Peak weekend',[['Mon','easy',90],['Wed','steady',45],['Sat','relay',240,'Dress rehearsal with {b}, and {c} if you can. Start around 2 PM: 1-hour shifts until 6 PM ({a} skates 2-3 and 4-5), then 2-hour shifts ({a} 6-8, {b} 8-10). {c} covers a meal break. Crew, food, lights, baton.'],['Sun','pace',120,'Day 2 on tired legs. One 2-hour block at race pace.']]],
+ [14,3,'Last big week',[['Mon','easy',90],['Wed','steady',60],['Fri','easy',60],['Sat','relay',240,'Last big session, in the race-day format. Test your food and your sleep in the rest block.']]],
+ [15,4,'Taper',[['Mon','easy',90],['Wed','steady',45],['Fri','easy',60],['Sat','pace',120,'One 2-hour block at race pace, then stop.']]],
+ [16,4,'Taper',[['Mon','easy',60],['Wed','easy',45,'Add a few relaxed 1-minute pickups.'],['Sat','long',120,'Easy. Check every piece of gear.']]],
+ [17,4,'Race week',[['Mon','easy',30,'Opener. Add four 20-second pickups.'],['Tue','easy',20,'Shakeout on the open track if the speedway allows it. Check the surface and your wheels.'],['Wed','race',1440]]]
+];
+var WK=RAW.map(function(r){
+  var start=addDays(START,7*(r[0]-1));
+  return {n:r[0],ph:r[1],theme:r[2],start:start,end:addDays(start,6),s:r[3].map(function(x){
+    return {id:'w'+r[0]+'-'+x[0],wk:r[0],ph:r[1],d:x[0],t:x[1],m:x[2],note:x[3]||'',date:addDays(start,DOW[x[0]])};
+  })};
+});
+var SESS=[];WK.forEach(function(w){w.s.forEach(function(x){SESS.push(x)})});
+var BYID={};SESS.forEach(function(x){BYID[x.id]=x});
+var est=function(x){return x.t==='race'?0:x.m/60*T[x.t].mph};
+var iso=function(d){return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2)};
+var parseISO=function(s){var m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(s||'');return m?new Date(+m[1],+m[2]-1,+m[3]):null};
+var entryDate=function(x,e){return (e&&parseISO(e.dt))||x.date};
+
+var KIT=['Helmet (required on the track)','Head light, board light, spare batteries','Reflective top or vest for night','Spare wheels, bearings and a skate tool','Race food you have already tested on long rides','Electrolytes and water bottles','Sunscreen and lip balm','Warm layers for the night block','Sleep kit: tent, mat, blanket, eye mask','Foot care: spare socks, tape, blister kit','ID or $100 cash for the timing chip deposit','Partner, third skater and crew registered, with the exact same team name','Lights for all three skaters, with spare batteries','Shift schedule and baton exchange plan agreed with your partner'];
+
+/* ---------- state + persistence ---------- */
+var S0={v:2,done:{},goal:157.2,kit:{},pa:6.6,pb:6.6,pc:5,tw:{lunch:1,dinner:1,night:1,bfast:1},nm:{a:'Manny',b:'Isaac',c:'Ivan'},updated:0};
+function norm(o){
+  var r=Object.assign({},S0,o||{},{done:(o&&o.done)||{},kit:(o&&o.kit)||{}}),d={};
+  Object.keys(r.done).forEach(function(k){var m=/^w(\d+)-(Tue|Thu)$/.exec(k),nk=k;if(m&&+m[1]<=16)nk='w'+m[1]+'-'+(m[2]==='Tue'?'Mon':'Wed');d[nk]=r.done[k]});
+  r.done=d;
+  r.tw=Object.assign({},S0.tw,(o&&o.tw)||{});
+  r.nm=Object.assign({},S0.nm,(o&&o.nm)||{});
+  if(((o&&o.v)||1)<2)r.goal=157.2;
+  r.v=2;return r;
+}
+function loadLocal(){try{var r=localStorage.getItem('ultraskate105');if(r)return norm(JSON.parse(r))}catch(e){}return norm()}
+function saveLocal(){try{localStorage.setItem('ultraskate105',JSON.stringify(S))}catch(e){}}
+var S=loadLocal(), ref=null, cloud='local', timer=null, busy=false, again=false;
+function push(){if(!ref)return;clearTimeout(timer);timer=setTimeout(flush,400)}
+function flush(){
+  if(busy){again=true;return}
+  busy=true;
+  Promise.resolve().then(function(){return ref.set(JSON.parse(JSON.stringify(S)))}).then(function(){cloud='on'},function(){cloud='local'}).then(function(){
+    busy=false;renderHero();if(again){again=false;flush()}
+  });
+}
+function persist(){S.updated=Date.now();saveLocal();push()}
+function mut(fn){fn(S);persist();render()}
+
+
+/* ---------- derived ---------- */
+var tab='today', focus=null, editing=null, openWk={};
+function wkStat(w){
+  var plan=0,logged=0,cnt=0,tot=0;
+  w.s.forEach(function(x){if(x.t==='race')return;tot++;plan+=est(x);var e=S.done[x.id];if(e){cnt++;logged+=e.mi}});
+  return {plan:plan,logged:logged,cnt:cnt,tot:tot};
+}
+function curWk(){var t=today();if(t<START)return 1;if(t>RACE)return 17;return Math.min(17,Math.floor((t-START)/(7*DAY))+1)}
+var TRACK=1.2;
+function lapRange(mi){return Math.floor(mi/TRACK+1e-9)+' laps'}
+function lapsFor(mi){return Math.ceil(mi/TRACK-1e-9)}
+function clock(m){var t=(8*60+m)%1440,h=Math.floor(t/60),mm=t%60,ap=h>=12?'PM':'AM';h=h%12;if(h===0)h=12;return h+':'+(mm<10?'0':'')+mm+' '+ap}
+function verdict(mph){
+  if(mph>=8.5)return ['ok','On track. A fresh pace of 8.5+ mph leaves room to hold about 6.6 mph in 2-hour shifts.'];
+  if(mph>=7.5)return ['warn','Tight. Holding 6.6 mph is possible but leaves little margin. A faster partner or a goal of 5 marathons gives you room.'];
+  return ['bad','A fresh pace under 7.5 mph makes 6.6 mph a long shot. Lean on a faster teammate, shorten the shifts, or aim for 5 marathons.'];
+}
+function ankleChip(a){var m={ok:['Fine','ok'],sore:['Sore','warn'],pain:['Pain','bad']}[a];return m?'<span class="chip '+m[1]+'">'+m[0]+'</span>':''}
+function testEntry(){for(var i=0;i<SESS.length;i++){if(SESS[i].t==='test'&&S.done[SESS[i].id])return {x:SESS[i],e:S.done[SESS[i].id]}}return null}
+function recentPain(){
+  var t=today(),best=null;
+  SESS.forEach(function(x){var e=S.done[x.id];if(e&&(!best||entryDate(x,e)>best.d))best={x:x,e:e,d:entryDate(x,e)}});
+  return best&&best.e.an==='pain'&&(t-best.d)<=7*DAY;
+}
+
+/* ---------- hero + tabs ---------- */
+function renderHero(){
+  var t=today(),days=Math.round((RACE-t)/DAY),k=curWk();
+  var d=$('#h-days'),lab=$('#h-label');
+  if(days>0){d.textContent=days;lab.textContent=days===1?'day to the start':'days to the start'}
+  else if(days===0){d.textContent='0';lab.textContent='race day'}
+  else{d.textContent='Done';lab.textContent='race complete'}
+  var wk=t<START?'Starts '+fmtD(START):(t>RACE?'Finished':'Week '+k+' of 17');
+  $('#h-facts').innerHTML='<div><dt>Goal</dt><dd>'+S.goal+' mi</dd></div><div><dt>Laps</dt><dd>'+lapsFor(S.goal)+' laps</dd></div><div><dt>Plan</dt><dd>'+wk+'</dd></div><div><dt>Track</dt><dd>1.2 mi</dd></div>';
+  var st='';
+  WK.forEach(function(w){var s=wkStat(w);var cls=s.tot&&s.cnt===s.tot?'full':(s.cnt?'part':'');if(w.n===k&&t>=START&&t<=RACE)cls+=' now';st+='<i class="'+cls+'"></i>'});
+  $('#strip').innerHTML=st;
+  $('#sync').textContent='Progress is saved on this device.';
+}
+function renderTabs(){
+  var items=[['today','Today'],['plan','Plan'],['race','Race day'],['log','Log']];
+  $('#tabs').innerHTML=items.map(function(i){return '<button class="tab" data-act="tab" data-tab="'+i[0]+'"'+(tab===i[0]?' aria-current="page"':'')+'>'+i[1]+'</button>'}).join('');
+}
+
+/* ---------- Today ---------- */
+function form(x,e){
+  var id=x.id,an=e?e.an:'ok',isT=x.t==='test';
+  var miLabel=isT?'Distance in 60 min (mi)':'Miles skated';
+  return '<form class="log" data-id="'+id+'" novalidate>'+
+    '<div class="fields">'+
+    '<div class="field"><label for="mi-'+id+'">'+miLabel+'</label><input type="number" inputmode="decimal" step="0.1" min="0" id="mi-'+id+'" name="mi" value="'+(e?e.mi:'')+'"></div>'+
+    '<div class="field"><label for="mn-'+id+'">Minutes</label><input type="number" inputmode="numeric" step="1" min="0" id="mn-'+id+'" name="mn" value="'+(e?e.mn:x.m)+'"></div>'+
+    '<div class="field wide"><label for="dt-'+id+'">Day trained</label><input type="date" id="dt-'+id+'" name="dt" value="'+iso(entryDate(x,e))+'" max="'+iso(today())+'"></div>'+
+    '<fieldset class="field wide"><legend>How the legs felt</legend><div class="seg">'+
+    ['ok','sore','pain'].map(function(a){var lb={ok:'Fine',sore:'Sore',pain:'Pain'}[a];return '<input type="radio" name="an" value="'+a+'" id="an-'+a+'-'+id+'"'+(an===a?' checked':'')+'><label for="an-'+a+'-'+id+'">'+lb+'</label>'}).join('')+
+    '</div></fieldset>'+
+    '<div class="field wide"><label for="nt-'+id+'">Note (optional)</label><input type="text" id="nt-'+id+'" name="nt" maxlength="200" value="'+esc(e?e.nt:'')+'"></div>'+
+    '</div><p class="err" hidden></p>'+
+    '<div class="actions"><button class="btn" type="submit">'+(e?'Save changes':'Log this ride')+'</button>'+(e?'<button class="btn ghost" type="button" data-act="cancel">Cancel</button>':'')+'</div></form>';
+}
+function summary(x,e){
+  var mph=e.mi/(e.mn/60),h='<dl class="sum"><div><dt>Miles</dt><dd>'+e.mi.toFixed(1)+'</dd></div><div><dt>Time</dt><dd>'+dur(e.mn)+'</dd></div><div><dt>Avg mph</dt><dd>'+mph.toFixed(1)+'</dd></div></dl>';
+  h+='<div class="actions">'+ankleChip(e.an)+'<span class="chip'+(sameDay(entryDate(x,e),x.date)?'':' hot')+'">Trained '+fmtDW(entryDate(x,e))+'</span></div>';
+  if(e.nt)h+='<p class="note">'+esc(e.nt)+'</p>';
+  if(x.t==='test'){var v=verdict(mph);h+='<div class="verdict '+v[0]+'"><p><b>'+mph.toFixed(1)+' mph fresh.</b> '+v[1]+' Rule of thumb, not a prediction.</p></div>'}
+  h+='<div class="actions"><button class="btn ghost small" data-act="edit" data-id="'+x.id+'">Edit</button><button class="btn ghost small" data-act="clear" data-id="'+x.id+'">Clear log</button></div>';
+  return h;
+}
+function swText(x){
+  if(x.t==='race')return '';
+  if(x.t==='test')return 'Push your main foot only for the test, so results can be compared fairly.';
+  var w=x.wk;
+  if(w<=3)return 'Switch your pushing foot every 20 minutes, about 15 on your main foot and 5 on the other. Flat, smooth ground. Skip the switch if anything feels off.';
+  if(w<=6)return 'Switch your pushing foot every 15 minutes, about 10 on your main foot then 5 on the other. Keep the switch slow and on flat ground.';
+  if(w<=9)return 'Switch every 10 to 15 minutes, about 70% main foot and 30% other.';
+  if(w<=14)return 'Switch every 10 minutes, about 60% main foot and 40% other. On long rides, keep switching when you are tired.';
+  return 'Keep the race-day rhythm: switch every 10 to 15 minutes.';
+}
+function card(x,label){
+  var tp=T[x.t],e=S.done[x.id];
+  var meta='<span>Week '+x.wk+'</span><span>'+PHASE[x.ph]+'</span>'+(x.t==='race'?'<span>24 hours</span><span>'+S.goal+' mi goal</span>':'<span>'+dur(x.m)+'</span><span>≈ '+est(x).toFixed(1)+' mi</span>');
+  var body;
+  if(x.t==='race')body='<div class="actions"><button class="btn" data-act="tab" data-tab="race">Open race day schedule</button></div>';
+  else if(e&&editing!==x.id)body=summary(x,e);
+  else body=form(x,e);
+  return '<article class="card"><p class="lbl">'+esc(label)+'</p><h2 class="title">'+tp.l+'</h2><div class="meta">'+meta+'</div><p class="how">'+tp.how+'</p>'+(x.note?'<p class="note">'+fill(x.note)+'</p>':'')+(swText(x)?'<p class="note"><b>Switching.</b> '+esc(swText(x))+'</p>':'')+body+'</article>';
+}
+function weekRows(w){
+  var t=today();
+  return '<ul class="rows">'+w.s.map(function(x){
+    var e=S.done[x.id],st,cls='';
+    if(e){st='✓ '+e.mi.toFixed(1)+' mi';cls='ok'}
+    else if(x.t==='race'){st='Race'}
+    else if(x.date<t){st='Missed';cls='miss'}
+    else st='≈ '+est(x).toFixed(1)+' mi';
+    return '<li><button class="rowbtn" data-act="focus" data-id="'+x.id+'"><span class="d">'+x.d+'</span><span class="t">'+T[x.t].l+' · '+(x.t==='race'?'24h':dur(x.m))+'<small>'+fmtD(e?entryDate(x,e):x.date)+'</small></span><span class="s '+cls+'">'+st+'</span></button></li>';
+  }).join('')+'</ul>';
+}
+function vToday(){
+  var t=today(),h='';
+  if(recentPain())h+='<div class="banner"><p><b>Pain logged on the last ride.</b> Cut the next ride in half or skip it. If it shows up twice in a row, get it looked at before adding distance.</p></div>';
+  if(focus&&BYID[focus]){
+    var f=BYID[focus];
+    h+='<div class="actions"><button class="btn ghost small" data-act="back">Back to today</button></div>'+card(f,'Selected session · '+fmtDW(f.date));
+  }else{
+    var on=SESS.filter(function(x){return sameDay(x.date,t)})[0];
+    if(on)h+=card(on,'Today · '+fmtDW(t));
+    else if(t>RACE)h+='<article class="card"><h2 class="title">Race weekend is behind you</h2><p class="how">Look back through the Log tab.</p></article>';
+    else{
+      var nx=SESS.filter(function(x){return x.date>t})[0];
+      if(nx)h+=card(nx,(t<START?'Plan starts '+fmtDW(START)+' · first session':'Rest day · next up')+' · '+fmtDW(nx.date));
+    }
+  }
+  if(t<=RACE){
+    var w=WK[curWk()-1];
+    h+='<section><h2 class="sec-title">Week '+w.n+(t<START?' preview':'')+' · '+esc(w.theme)+'</h2><p class="sub" style="margin:4px 0 10px">'+fmtD(w.start)+'–'+fmtD(w.end)+'. Tap a session to open or log it.</p>'+weekRows(w)+'</section>';
+  }
+  return h;
+}
+
+/* ---------- Plan ---------- */
+function vPlan(){
+  var te=testEntry(),t3=BYID['w3-Fri'],t8=BYID['w8-Sat'],e8=S.done['w8-Sat'];
+  var CPT={3:'Pace test',9:'Body check',13:'Pick your goal'};
+  function cpBlock(n){
+    var b='<div class="cpbox"><p class="cpk">Checkpoint</p><h3>'+CPT[n]+'</h3>';
+    if(n===3){
+      b+='<p class="when">'+fmtDW(t3.date)+'</p>';
+      if(te){var mph=te.e.mi/(te.e.mn/60),v=verdict(mph);b+='<p><span class="chip '+v[0]+'">'+mph.toFixed(1)+' mph</span> '+v[1]+'</p>'}
+      else b+='<p>One hour, as fast as you can hold evenly. This tells us whether about 6.6 mph over 12 hours of skating is realistic.</p>';
+    }else if(n===9){
+      b+='<p class="when">After the 4-hour ride on '+fmtDW(t8.date)+'</p>';
+      if(e8)b+='<p>'+ankleChip(e8.an)+' '+(e8.an==='ok'?'Clear to keep building.':'Hold the long rides at this length until it settles.')+'</p>';
+      else b+='<p>Any ache after hour 3? If yes, hold the long rides where they are.</p>';
+    }else{
+      b+='<p class="when">After the peak weekend, Jan 23–24</p><p>Decide as a team, '+nm('a')+', '+nm('b')+' and '+nm('c')+': six marathons (157.2 mi, 131 laps) or five (131 mi, 110 laps).</p><div class="goalrow">'+
+        [157.2,131].map(function(g){var lb=g===157.2?'6 marathons':'5 marathons';return '<button class="btn small'+(S.goal===g?'':' ghost')+'" data-act="goal" data-val="'+g+'" aria-pressed="'+(S.goal===g)+'">'+lb+' · '+g+' mi</button>'}).join('')+'</div>';
+    }
+    return b+'</div>';
+  }
+  var h='<p class="sub" style="max-width:62ch">One plan for the whole team. Everyone follows the same weeks. The third skater has no pace expectations and can do as much or as little as they like.</p>';
+
+  var k=curWk(),t=today(),maxP=0;
+  WK.forEach(function(w){maxP=Math.max(maxP,wkStat(w).plan,wkStat(w).logged)});
+  h+='<section><h2 class="sec-title">Weekly miles</h2><p class="sub" style="margin:4px 0 10px">Gray is planned. Blue is what you logged. Estimates use 5 mph easy and long, 6 mph steady, and 6.4 to 6.6 mph at race pace.</p><div class="bars">';
+  WK.forEach(function(w){var s=wkStat(w),ph=maxP?s.plan/maxP*100:0,lg=s.plan?Math.min(100,s.logged/s.plan*100):0;
+    h+='<div class="bcol'+((w.n===k&&t>=START&&t<=RACE)?' now':'')+'"><div class="bar" style="height:'+ph.toFixed(1)+'%" title="Week '+w.n+': '+s.plan.toFixed(0)+' mi planned"><i style="height:'+lg.toFixed(1)+'%"></i></div></div>'});
+  h+='</div><div class="bnums">'+WK.map(function(w){return '<span>'+w.n+'</span>'}).join('')+'</div></section>';
+
+  var lastPh=0;
+  h+='<section>';
+  WK.forEach(function(w){
+    if(w.ph!==lastPh){
+      lastPh=w.ph;var ws=WK.filter(function(z){return z.ph===w.ph});
+      h+='<h3 class="phase">Phase '+w.ph+' · '+PHASE[w.ph]+' <span>Wk '+ws[0].n+'–'+ws[ws.length-1].n+'</span></h3>';
+    }
+    var s=wkStat(w),open=openWk[w.n]!==undefined?openWk[w.n]:(w.n===k);
+    h+='<details class="wk'+(CPT[w.n]?' cpw':'')+'" data-wk="'+w.n+'"'+(open?' open':'')+'><summary><span class="wn">'+(w.n<10?'0':'')+w.n+'</span><span class="wmid"><b>'+esc(w.theme)+'</b><small>'+fmtD(w.start)+'–'+fmtD(w.end)+' · '+s.cnt+'/'+s.tot+' logged'+(CPT[w.n]?' \u00b7 Checkpoint: '+CPT[w.n]:'')+'</small></span><span class="wm">'+(w.n===17?'Race':s.plan.toFixed(0)+' mi')+'</span></summary>'+(CPT[w.n]?cpBlock(w.n):'')+weekRows(w)+'</details>';
+  });
+  return h+'</section>';
+}
+
+/* ---------- Race day ---------- */
+function rn(k){var v=((S.nm&&S.nm[k])||'').trim();return v||({a:'Skater 1',b:'Skater 2',c:'Skater 3'})[k]}
+function nm(k){return esc(rn(k))}
+function fill(t){return esc(t).replace(/\{a\}/g,nm('a')).replace(/\{b\}/g,nm('b')).replace(/\{c\}/g,nm('c'))}
+var adminOpen=false;
+function renderAdmin(){
+  var el=$('#admin'),btn=$('#h-days');
+  el.hidden=!adminOpen;btn.setAttribute('aria-expanded',adminOpen?'true':'false');
+  if(!adminOpen){el.innerHTML='';return}
+  var f=[['a','Skater 1','Trades 1-hour and 2-hour shifts'],['b','Skater 2','Trades 1-hour and 2-hour shifts'],['c','Skater 3','Covers breaks only']];
+  el.innerHTML='<h2 class="sec-title">Team admin</h2><p class="sub">These names appear on the Race day tab.</p><div class="fields">'+f.map(function(x){return '<div class="field wide"><label for="nm-'+x[0]+'">'+x[1]+' · '+x[2]+'</label><input type="text" id="nm-'+x[0]+'" maxlength="20" autocomplete="off" value="'+esc((S.nm[x[0]]||''))+'"></div>'}).join('')+'</div><div class="actions"><button class="btn" type="button" data-act="admin">Done</button><button class="btn ghost" type="button" data-act="names-reset">Reset names</button></div>';
+}
+var WINS=[{k:'lunch',l:'Lunch break',a:240,len:30},{k:'dinner',l:'Dinner break',a:600,len:30},{k:'night',l:'Overnight rest',a:1020,len:60},{k:'bfast',l:'Breakfast break',a:1320,len:30}];
+function team(){
+  var segs=[],t=0,i=0;
+  for(;t<480;t+=60,i++)segs.push({w:i%2?'b':'a',a:t,b:t+60});
+  for(;t<1440;t+=120,i++)segs.push({w:i%2?'b':'a',a:t,b:t+120});
+  var wins=WINS.filter(function(w){return S.tw[w.k]}).map(function(w){return {l:w.l,a:w.a,b:w.a+w.len}});
+  var out=[];
+  segs.forEach(function(sg){
+    var cur=sg.a;
+    wins.filter(function(w){return w.a<sg.b&&w.b>sg.a}).forEach(function(w){
+      var ws=Math.max(w.a,sg.a),we=Math.min(w.b,sg.b);
+      if(ws>cur)out.push({w:sg.w,a:cur,b:ws});
+      out.push({w:'c',a:ws,b:we,l:w.l});cur=we;
+    });
+    if(cur<sg.b)out.push({w:sg.w,a:cur,b:sg.b});
+  });
+  var mis=[0,0,0],mn=[0,0,0],cum=0,pts=[[0,0]],idx={a:0,b:1,c:2},pace={a:S.pa,b:S.pb,c:S.pc};
+  out.forEach(function(r,j){
+    var mins=(r.b-r.a)-(j&&out[j-1].w!==r.w?1:0),k=idx[r.w],add=mins/60*pace[r.w];
+    r.mins=mins;mis[k]+=add;mn[k]+=mins;cum+=add;r.cum=cum;pts.push([r.b,cum]);
+  });
+  return {mi:cum,mis:mis,mn:mn,rows:out,pts:pts,total:mn[0]+mn[1]+mn[2]};
+}
+function needPace(Tm){return (S.goal-Tm.mis[2])/((Tm.mn[0]+Tm.mn[1])/60)}
+function raceDyn(){
+  var Tm=team(),mi=Tm.mi,need=needPace(Tm);
+  var W=640,H=250,L=36,RM=58,TT=14,B=26,ymax=Math.ceil(Math.max(S.goal,mi)*1.1/20)*20,step=ymax>120?40:20;
+  var x=function(m){return L+(W-L-RM)*m/1440},y=function(v){return TT+(H-TT-B)*(1-v/ymax)};
+  var g='<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Team miles over the 24 hours, ending at '+mi.toFixed(1)+' miles">';
+  Tm.rows.forEach(function(r){if(r.w!=='a')g+='<rect class="'+(r.w==='b'?'zz':'zt')+'" x="'+x(r.a).toFixed(1)+'" y="'+TT+'" width="'+(x(r.b)-x(r.a)).toFixed(1)+'" height="'+(H-TT-B)+'"/>'});
+  for(var v=0;v<=ymax;v+=step){g+='<line class="ax" x1="'+L+'" x2="'+(W-RM)+'" y1="'+y(v).toFixed(1)+'" y2="'+y(v).toFixed(1)+'"/><text class="gt" x="'+(L-6)+'" y="'+(y(v)+3).toFixed(1)+'" text-anchor="end">'+v+'</text>'}
+  for(var m=0;m<=1440;m+=240){var hh=(8+m/60)%24,lb=(hh%12===0?12:hh%12)+(hh>=12?'p':'a');g+='<text class="gt" x="'+x(m).toFixed(1)+'" y="'+(H-8)+'" text-anchor="'+(m===0?'start':(m===1440?'end':'middle'))+'">'+lb+'</text>'}
+  g+='<line class="axk" x1="'+L+'" x2="'+(W-RM)+'" y1="'+y(0).toFixed(1)+'" y2="'+y(0).toFixed(1)+'"/>';
+  g+='<line class="tg" x1="'+L+'" x2="'+(W-RM)+'" y1="'+y(S.goal).toFixed(1)+'" y2="'+y(S.goal).toFixed(1)+'"/><text class="gt hot" x="'+(L+6)+'" y="'+(y(S.goal)-5).toFixed(1)+'">goal '+S.goal+'</text>';
+  g+='<polyline class="ln" points="'+Tm.pts.map(function(p){return x(p[0]).toFixed(1)+','+y(p[1]).toFixed(1)}).join(' ')+'"/>';
+  g+='<text class="gt end" x="'+(W-RM+6)+'" y="'+(y(mi)+4).toFixed(1)+'">'+mi.toFixed(1)+' mi</text></svg>';
+  var done=Math.floor(mi/TRACK+1e-9),want=lapsFor(S.goal),diff=done-want;
+  var ad=Math.abs(diff),lp=ad===1?' lap':' laps';var res=diff===0?'Exactly on goal':(diff>0?ad+lp+' ahead of goal':ad+lp+' short of goal');
+  var out='<div class="paceval"><div class="big">'+mi.toFixed(1)+'<small>miles</small></div><p class="sub">'+done+' laps · '+(mi/26.2).toFixed(1)+' marathons · '+res+'. '+nm('a')+' and '+nm('b')+' need <b class="mono">'+need.toFixed(2)+' mph</b> while skating.</p></div>';
+  out+='<dl class="sum"><div><dt>'+nm('a')+'</dt><dd>'+(Tm.mn[0]/60).toFixed(1)+' h · '+Tm.mis[0].toFixed(0)+' mi</dd></div><div><dt>'+nm('b')+'</dt><dd>'+(Tm.mn[1]/60).toFixed(1)+' h · '+Tm.mis[1].toFixed(0)+' mi</dd></div><div><dt>'+nm('c')+'</dt><dd>'+(Tm.mn[2]/60).toFixed(1)+' h · '+Tm.mis[2].toFixed(0)+' mi</dd></div></dl>';
+  out+='<p class="sub">Each handoff costs about 1 minute. Handoffs cost the team '+(1440-Tm.total)+' minutes of skating in all.</p>';
+  out+='<div class="chartwrap">'+g+'<p class="legend">Gray bands are '+nm('b')+'\'s shifts, orange bands are '+nm('c')+'\'s. Dashed line is your goal. Time of day on the bottom axis.</p></div>';
+  out+='<ul class="rows sched">'+Tm.rows.map(function(r){
+    var h=((8*60+r.a)/60)%24,night=h>=18||h<6;
+    var who=nm(r.w),cls=r.w==='a'?'':(r.w==='b'?'pt':'c');
+    var txt=r.w==='c'?nm('c')+' covers the '+r.l.toLowerCase()+'.':nm(r.w)+' skates.';
+    return '<li class="'+cls+'"><div><span class="tm">'+clock(r.a)+' – '+clock(r.b)+' · '+dur(r.b-r.a)+(night?' · <span class="nt">night</span>':'')+'</span><span class="lb"><span class="k">'+who+'</span><span>'+txt+'</span></span></div><span class="mi">'+r.cum.toFixed(1)+'</span></li>';
+  }).join('')+'</ul>';
+  out+='<p class="sub" style="max-width:62ch">For the first 8 hours '+nm('a')+' and '+nm('b')+' swap every hour, so each rest is 1 hour: eat, stretch and stay loose. From 4 PM they swap every 2 hours, so each rest is 2 hours with about 90 minutes of real sleep. '+nm('c')+' covers the meal and overnight windows while whoever is scheduled takes a break.</p>';
+  return out;
+}
+function vRace(){
+  var h='<section class="pace"><h2 class="sec-title">24 hours, 8 AM to 8 AM</h2><p class="sub">Three skaters, one on the track at a time. '+nm('a')+' and '+nm('b')+' trade 1-hour shifts for the first 8 hours, then 2-hour shifts. '+nm('c')+' only covers breaks.</p>'+
+   '<p class="sub" style="margin-top:6px">'+nm('c')+' covers</p><div class="goalrow">'+WINS.map(function(w){return '<button class="btn small'+(S.tw[w.k]?'':' ghost')+'" data-act="win" data-k="'+w.k+'" aria-pressed="'+(!!S.tw[w.k])+'">'+w.l.replace(' break','').replace(' rest','')+' '+clock(w.a)+'</button>'}).join('')+'</div>'+
+   '<label for="pa">'+nm('a')+'\'s moving pace: <b class="mono" id="pa-out">'+S.pa.toFixed(2)+' mph</b></label><input type="range" id="pa" min="4.5" max="8.5" step="0.05" value="'+S.pa+'">'+
+   '<label for="pb">'+nm('b')+'\'s moving pace: <b class="mono" id="pb-out">'+S.pb.toFixed(2)+' mph</b></label><input type="range" id="pb" min="4.5" max="8.5" step="0.05" value="'+S.pb+'">'+
+   '<label for="pc">'+nm('c')+'\'s moving pace: <b class="mono" id="pc-out">'+S.pc.toFixed(2)+' mph</b></label><input type="range" id="pc" min="3" max="7" step="0.05" value="'+S.pc+'">'+
+   '<div class="actions"><button class="btn ghost small" data-act="req">'+nm('a')+' and '+nm('b')+' at pace for goal</button></div></section>';
+  h+='<section id="race-dyn" style="display:flex;flex-direction:column;gap:16px">'+raceDyn()+'</section>';
+  h+='<section><h2 class="sec-title">Rules to remember</h2><ul class="plain" style="margin-top:10px"><li>Only full laps count, and a lap is 1.2 miles. 131 laps is exactly six marathons (157.2 mi).</li><li>One skater is on the track at a time. The baton goes across the timing line on the ground every lap. Never raise it above your head or hide it.</li><li>Helmet on whenever you are on the track.</li><li>Teams do not wear bibs. The race provides the baton with the timing chip.</li><li>Your crew works from Pit Road only, never on the track.</li><li>The team captain registers first. The other two then register with the exact same team name. Skateboard teams can have up to 4 people.</li><li>Switch the pushing foot every 15 to 20 minutes during each shift. Go back to your main foot if anything complains.</li><li>The site mentions Monday night gates, but Feb 17 is a Wednesday. Ask the race directors which night camping opens and where batons must be exchanged.</li></ul></section>';
+  h+='<section><h2 class="sec-title">Race kit</h2><ul class="rows kit" style="margin-top:10px">'+KIT.map(function(k,i){return '<li><label for="kit'+i+'"><input type="checkbox" id="kit'+i+'" data-kit="'+i+'"'+(S.kit[i]?' checked':'')+'><span>'+esc(k)+'</span></label></li>'}).join('')+'</ul></section>';
+  return h;
+}
+
+/* ---------- Log ---------- */
+function vLog(){
+  var ents=[];SESS.forEach(function(x){if(S.done[x.id])ents.push({x:x,e:S.done[x.id]})});
+  ents.sort(function(a,b){return entryDate(b.x,b.e)-entryDate(a.x,a.e)});
+  var mi=0,mn=0,long=0,sess=SESS.filter(function(x){return x.t!=='race'}).length;
+  ents.forEach(function(r){mi+=r.e.mi;mn+=r.e.mn;if(r.e.mi>long)long=r.e.mi});
+  var h='<section><h2 class="sec-title">Totals</h2><dl class="stats" style="margin-top:12px"><div><dt>Rides logged</dt><dd>'+ents.length+' / '+sess+'</dd></div><div><dt>Miles</dt><dd>'+mi.toFixed(0)+'</dd></div><div><dt>Hours</dt><dd>'+(mn/60).toFixed(1)+'</dd></div><div><dt>Longest ride</dt><dd>'+(long?long.toFixed(1)+' mi':'—')+'</dd></div></dl></section>';
+  if(!ents.length){
+    var first=SESS[0];
+    h+='<div class="empty"><h3 class="sec-title">Nothing logged yet</h3><p class="how" style="margin-top:8px">The first session is '+fmtDW(first.date)+': '+T[first.t].l.toLowerCase()+', '+dur(first.m)+'. Log it from the Today tab and it will show up here.</p></div>';
+  }else{
+    h+='<section><h2 class="sec-title">History</h2><ul class="rows" style="margin-top:10px">'+ents.map(function(r){
+      return '<li><button class="rowbtn" data-act="focus" data-id="'+r.x.id+'"><span class="d">'+r.x.d+'</span><span class="t">'+T[r.x.t].l+' · '+dur(r.e.mn)+'<small>'+fmtD(entryDate(r.x,r.e))+' · Wk '+r.x.wk+(r.e.nt?' · '+esc(r.e.nt):'')+'</small></span><span class="s">'+r.e.mi.toFixed(1)+' mi<br>'+ankleChip(r.e.an)+'</span></button></li>';
+    }).join('')+'</ul></section>';
+  }
+  return h;
+}
+
+/* ---------- render + events ---------- */
+function paintView(){$('#view').innerHTML=({today:vToday,plan:vPlan,race:vRace,log:vLog})[tab]()}
+function render(){renderHero();renderTabs();paintView()}
+document.addEventListener('click',function(e){
+  var b=e.target.closest('[data-act]');if(!b)return;
+  var a=b.dataset.act,id=b.dataset.id;
+  if(a==='admin'){adminOpen=!adminOpen;renderAdmin();if(adminOpen){var fi=$('#nm-a');if(fi)fi.focus()}return}
+  if(a==='names-reset'){mut(function(s){s.nm=Object.assign({},S0.nm)});renderAdmin();return}
+  if(a==='tab'){tab=b.dataset.tab;focus=null;editing=null;render();window.scrollTo(0,0)}
+  else if(a==='focus'){focus=id;editing=null;tab='today';render();window.scrollTo(0,0)}
+  else if(a==='back'){focus=null;editing=null;render()}
+  else if(a==='edit'){editing=id;render()}
+  else if(a==='cancel'){editing=null;render()}
+  else if(a==='clear'){editing=null;mut(function(s){delete s.done[id]})}
+  else if(a==='goal'){mut(function(s){s.goal=parseFloat(b.dataset.val)})}
+  else if(a==='win'){var k=b.dataset.k;mut(function(s){s.tw[k]=s.tw[k]?0:1})}
+  else if(a==='req'){var v=Math.ceil(needPace(team())*20)/20;mut(function(s){s.pa=v;s.pb=v})}
+});
+document.addEventListener('submit',function(e){
+  var f=e.target.closest('form.log');if(!f)return;e.preventDefault();
+  var id=f.dataset.id,mi=parseFloat(f.elements.mi.value),mn=parseInt(f.elements.mn.value,10);
+  var dv=f.elements.dt.value,dd=parseISO(dv);
+  var an=f.elements.an.value||'ok',nt=f.elements.nt.value.trim().slice(0,200),err=f.querySelector('.err');
+  if(!dd||dd>today()){err.hidden=false;err.textContent='Pick the day you skated. It cannot be in the future.';return}
+  if(!(mi>0)||!(mn>0)||mi>200||mn>1500){err.hidden=false;err.textContent='Enter the distance and time you actually skated.';return}
+  editing=null;
+  mut(function(s){s.done[id]={mi:Math.round(mi*100)/100,mn:mn,an:an,nt:nt,dt:dv,ts:Date.now()}});
+});
+document.addEventListener('input',function(e){
+  var mm=/^nm-([abc])$/.exec(e.target.id);
+  if(mm){S.nm[mm[1]]=e.target.value.slice(0,20);persist();paintView();return}
+  if(/^p[abc]$/.test(e.target.id)){var k=e.target.id;S[k]=parseFloat(e.target.value);$('#'+k+'-out').textContent=S[k].toFixed(2)+' mph';$('#race-dyn').innerHTML=raceDyn()}
+});
+document.addEventListener('change',function(e){
+  var t=e.target;
+  if(/^p[abc]$/.test(t.id)){persist()}
+  else if(t.dataset&&t.dataset.kit!==undefined){var i=t.dataset.kit,on=t.checked;S.kit[i]=on?1:0;persist()}
+});
+document.addEventListener('toggle',function(e){var d=e.target;if(d&&d.dataset&&d.dataset.wk)openWk[d.dataset.wk]=d.open},true);
+
+function cyrb53(str,seed){seed=seed||0;var h1=0xdeadbeef^seed,h2=0x41c6ce57^seed;for(var i=0,ch;i<str.length;i++){ch=str.charCodeAt(i);h1=Math.imul(h1^ch,2654435761);h2=Math.imul(h2^ch,1597334677)}h1=Math.imul(h1^(h1>>>16),2246822507)^Math.imul(h2^(h2>>>13),3266489909);h2=Math.imul(h2^(h2>>>16),2246822507)^Math.imul(h1^(h1>>>13),3266489909);return (4294967296*(2097151&h2)+(h1>>>0)).toString(36)}
+var GATE_HASH='gcre1dgt8q';
+function openApp(){$('#gate').hidden=true;$('#app').hidden=false;render()}
+var gateOk=false;try{gateOk=localStorage.getItem('ultraskate-unlock')===GATE_HASH}catch(e){}
+if(gateOk)openApp();else{var gi=$('#gate-pw');if(gi)gi.focus()}
+$('#gate-form').addEventListener('submit',function(e){
+  e.preventDefault();
+  if(cyrb53($('#gate-pw').value)===GATE_HASH){try{localStorage.setItem('ultraskate-unlock',GATE_HASH)}catch(x){}openApp()}
+  else{var er=$('#gate-err');er.hidden=false;er.textContent='Wrong password.'}
+});
+})();
+</script>
+</body></html>
