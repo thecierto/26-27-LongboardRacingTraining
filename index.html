@@ -1,0 +1,920 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>The Cierto 27 Ultraskate Training</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Big+Shoulders+Display:wght@700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
+<style>
+/* Layout: one-column timing sheet. Big day countdown top-left, sticky tab bar, ruled rows instead of stacked cards. */
+:root{
+  --bg:#e3e5e1; --surface:#f0f1ee; --ink:#14181b; --muted:#566067; --line:#c3c8c3; --track:#d1d5d0;
+  --accent:#0a5c7a; --on-accent:#ffffff; --hot:#b13d06; --ok:#1d7443; --warn:#8f6200; --bad:#b3261e;
+  --cp:#6f9275; --on-cp:#0d1710;
+  --display:'Big Shoulders Display','Arial Narrow',Impact,sans-serif;
+  --body:'Barlow',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --mono:'IBM Plex Mono',ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#101416; --surface:#192024; --ink:#e8ecea; --muted:#97a3a8; --line:#2b3438; --track:#262f33;
+    --accent:#52b8d8; --on-accent:#06161c; --hot:#ff8248; --ok:#4cc27d; --warn:#e0b341; --bad:#ff7b72;
+    --cp:#4a6b52; --on-cp:#eef5ef;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#101416; --surface:#192024; --ink:#e8ecea; --muted:#97a3a8; --line:#2b3438; --track:#262f33;
+  --accent:#52b8d8; --on-accent:#06161c; --hot:#ff8248; --ok:#4cc27d; --warn:#e0b341; --bad:#ff7b72;
+  --cp:#4a6b52; --on-cp:#eef5ef;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{
+  background:var(--bg); color:var(--ink); font:16px/1.5 var(--body);
+  padding-left:max(16px,env(safe-area-inset-left,0px));
+  padding-right:max(16px,env(safe-area-inset-right,0px));
+  padding-block:0 48px;
+}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.wrap{max-width:720px;margin:0 auto}
+h1,h2,h3,p,ul,ol,dl,dd{margin:0}
+ul,ol{padding:0;list-style:none}
+button,input{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+
+/* hero */
+.hero{padding-top:20px;display:flex;flex-direction:column;gap:14px}
+.eyebrow{font:500 .75rem/1.4 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.hero-grid{display:flex;flex-wrap:wrap;gap:12px 32px;align-items:flex-end}
+.count{font:800 clamp(5rem,26vw,8.5rem)/.82 var(--display);letter-spacing:-.01em;font-variant-numeric:tabular-nums}
+.count-label{font:700 1rem/1.2 var(--display);letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:6px}
+.facts{display:grid;grid-template-columns:repeat(2,minmax(0,auto));gap:10px 28px}
+.facts div{min-width:0}
+.facts dt{font:500 .7rem/1.2 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.facts dd{font:700 1.6rem/1.1 var(--display);letter-spacing:.01em}
+.strip{display:grid;grid-template-columns:repeat(17,minmax(0,1fr));gap:3px}
+.strip i{display:block;height:10px;background:var(--track)}
+.strip i.part{background:color-mix(in srgb,var(--accent) 45%,var(--track))}
+.strip i.full{background:var(--accent)}
+.strip i.now{outline:2px solid var(--ink);outline-offset:1px}
+.sync{font:400 .72rem/1.3 var(--mono);color:var(--muted)}
+
+/* tabs */
+.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);display:flex;gap:0;margin-top:12px;border-bottom:2px solid var(--ink)}
+.tab{flex:1;min-width:0;background:none;border:0;padding:12px 4px;font:700 1.05rem/1 var(--display);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);cursor:pointer}
+.tab[aria-current="page"]{color:var(--on-accent);background:var(--ink)}
+.tab[aria-current="page"]{color:var(--bg)}
+#view{padding-top:20px;display:flex;flex-direction:column;gap:24px}
+
+/* common */
+.sec-title{font:700 1.4rem/1.1 var(--display);letter-spacing:.04em;text-transform:uppercase}
+.sub{color:var(--muted);font-size:.9rem}
+.chip{display:inline-block;font:500 .72rem/1 var(--mono);letter-spacing:.04em;text-transform:uppercase;padding:4px 7px;border:1px solid currentColor}
+.chip.ok{color:var(--ok)} .chip.warn{color:var(--warn)} .chip.bad{color:var(--bad)} .chip.hot{color:var(--hot)}
+.btn{background:var(--accent);color:var(--on-accent);border:2px solid var(--accent);padding:10px 16px;font:700 1rem/1 var(--display);letter-spacing:.1em;text-transform:uppercase;cursor:pointer;min-height:44px}
+.btn.ghost{background:none;color:var(--ink);border-color:var(--ink)}
+.btn.small{padding:8px 12px;min-height:38px;font-size:.9rem}
+.banner{border:2px solid var(--bad);padding:12px 14px;color:var(--ink)}
+.banner b{color:var(--bad)}
+
+/* session card */
+.card{background:var(--surface);padding:18px 16px;display:flex;flex-direction:column;gap:14px;border:1px solid var(--line)}
+.card .lbl{font:500 .75rem/1.3 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--hot)}
+.card .title{font:800 2.6rem/.95 var(--display);letter-spacing:.005em;text-wrap:balance}
+.meta{display:flex;flex-wrap:wrap;gap:6px 14px;font:500 .85rem/1.3 var(--mono);color:var(--muted)}
+.how{max-width:62ch}
+.note{max-width:62ch;border-top:1px solid var(--line);padding-top:10px}
+.log{display:flex;flex-direction:column;gap:14px;border-top:1px solid var(--line);padding-top:14px}
+.fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.field{display:flex;flex-direction:column;gap:4px;min-width:0}
+.field.wide{grid-column:1/-1}
+label,legend{font:500 .72rem/1.2 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding:0}
+input[type=number],input[type=text],input[type=date]{background:var(--bg);border:1px solid var(--ink);padding:10px;width:100%;min-height:44px;border-radius:0}
+fieldset{border:0;margin:0;padding:0;min-width:0}
+.seg{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.seg input{position:absolute;opacity:0;pointer-events:none}
+.seg label{font:700 .95rem/1 var(--display);letter-spacing:.08em;color:var(--ink);padding:11px 14px;border:1px solid var(--ink);cursor:pointer;min-height:44px;display:flex;align-items:center}
+.seg input:checked+label{background:var(--ink);color:var(--bg)}
+.seg input:focus-visible+label{outline:2px solid var(--accent);outline-offset:2px}
+.err{color:var(--bad);font-size:.9rem}
+.sum{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.sum div{min-width:0}
+.sum dt{font:500 .68rem/1.2 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.sum dd{font:700 1.7rem/1.1 var(--display)}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+.verdict{border:1px solid currentColor;padding:10px 12px}
+.verdict.ok{color:var(--ok)} .verdict.warn{color:var(--warn)} .verdict.bad{color:var(--bad)}
+.verdict p{color:var(--ink)}
+
+/* ruled lists */
+.rows{border-top:2px solid var(--ink)}
+.rows>li{border-bottom:1px solid var(--line)}
+.rowbtn{width:100%;display:grid;grid-template-columns:3.2rem minmax(0,1fr) auto;gap:10px;align-items:center;text-align:left;background:none;border:0;padding:12px 2px;cursor:pointer}
+.rowbtn .d{font:700 1.2rem/1 var(--display);letter-spacing:.06em;text-transform:uppercase}
+.rowbtn .t{min-width:0}
+.rowbtn .t small{display:block;color:var(--muted);font:400 .8rem/1.3 var(--mono)}
+.rowbtn .s{font:500 .85rem/1 var(--mono);text-align:right}
+.rowbtn .s.ok{color:var(--ok)} .rowbtn .s.miss{color:var(--hot)}
+
+/* plan */
+.cp{display:flex;flex-direction:column;gap:6px;padding:14px 0;border-bottom:1px solid var(--line)}
+.cp h3{font:700 1.2rem/1.1 var(--display);letter-spacing:.04em;text-transform:uppercase}
+.cp .when{font:500 .75rem/1.3 var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.bars{display:flex;align-items:flex-end;gap:3px;height:120px;border-bottom:2px solid var(--ink)}
+.bcol{flex:1;min-width:0;height:100%;display:flex;flex-direction:column;justify-content:flex-end}
+.bar{background:var(--track);position:relative;display:flex;align-items:flex-end}
+.bar i{display:block;width:100%;background:var(--accent)}
+.bcol.now .bar{outline:2px solid var(--ink)}
+.bnums{display:flex;gap:3px;margin-top:4px}
+.bnums span{flex:1;min-width:0;text-align:center;font:400 .62rem/1 var(--mono);color:var(--muted)}
+.phase{font:700 1.15rem/1.1 var(--display);letter-spacing:.06em;text-transform:uppercase;padding:18px 0 8px}
+.phase span{color:var(--muted);font-weight:700}
+details.wk{border-bottom:1px solid var(--line)}
+details.wk>summary{list-style:none;display:grid;grid-template-columns:3.2rem minmax(0,1fr) auto;gap:10px;align-items:center;padding:12px 2px;cursor:pointer}
+details.wk>summary::-webkit-details-marker{display:none}
+.wn{font:800 1.5rem/1 var(--display)}
+.wmid b{display:block;font:700 1.05rem/1.1 var(--display);letter-spacing:.03em}
+.wmid small{color:var(--muted);font:400 .78rem/1.3 var(--mono)}
+.wm{font:500 .85rem/1 var(--mono);text-align:right}
+details.wk[open]>summary{background:color-mix(in srgb,var(--ink) 6%,transparent)}
+details.wk .rows{border-top:1px solid var(--line)}
+.cpw>summary,details.wk.cpw[open]>summary{background:var(--cp);color:var(--on-cp)}
+details.wk.cpw{border-bottom:2px solid var(--cp)}
+.cpw .wmid small,.cpw .wm{color:var(--on-cp)}
+.cpw .wmid small{opacity:.85}
+.cpbox{background:color-mix(in srgb,var(--cp) 16%,var(--bg));padding:14px 12px;display:flex;flex-direction:column;gap:8px}
+.cpbox h3{font:700 1.2rem/1.1 var(--display);letter-spacing:.04em;text-transform:uppercase}
+.cpbox .cpk{font:500 .72rem/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.cpbox .when{font:500 .75rem/1.3 var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.wknote{padding:8px 2px 4px;color:var(--muted);font-size:.9rem}
+
+/* race */
+.pace{display:flex;flex-direction:column;gap:8px}
+.pace input[type=range]{width:100%;accent-color:var(--accent);min-height:32px}
+.paceval{display:flex;flex-wrap:wrap;gap:6px 18px;align-items:baseline}
+.big{font:800 3.2rem/.9 var(--display);font-variant-numeric:tabular-nums}
+.big small{font:700 1rem/1 var(--display);letter-spacing:.1em;color:var(--muted);text-transform:uppercase;margin-left:4px}
+.chartwrap{border:1px solid var(--line);background:var(--surface);padding:8px 4px 4px}
+.chartwrap svg{display:block;width:100%;height:auto;max-width:100%}
+.ax{stroke:var(--line);stroke-width:1;fill:none}
+.axk{stroke:var(--ink);stroke-width:1.5;fill:none}
+.gt{fill:var(--muted);font:10px var(--mono)}
+.gt.end{fill:var(--ink);font-weight:500}
+.gt.hot{fill:var(--hot)}
+.ln{stroke:var(--accent);stroke-width:2.5;fill:none;stroke-linejoin:round}
+.tg{stroke:var(--hot);stroke-width:1.5;stroke-dasharray:5 4;fill:none}
+.zz{fill:var(--track)}
+.legend{font:400 .75rem/1.3 var(--mono);color:var(--muted);padding:4px 8px 6px}
+.sched li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;padding:10px 2px;align-items:baseline}
+.sched .tm{font:400 .78rem/1.3 var(--mono);color:var(--muted);display:block}
+.sched .lb{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
+.sched .k{font:700 .8rem/1 var(--display);letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+.sched .sleep .k{color:var(--hot)}
+.sched .pit .k,.sched .meal .k{color:var(--muted)}
+.sched .sleep{background:color-mix(in srgb,var(--hot) 8%,transparent)}
+.sched .mi{font:500 1rem/1 var(--mono);text-align:right}
+ul.plain{display:flex;flex-direction:column;gap:8px;padding-left:1.1rem;list-style:disc;max-width:62ch}
+.kit li{border-bottom:1px solid var(--line)}
+.kit label{display:flex;gap:12px;align-items:center;padding:12px 2px;font:400 1rem/1.3 var(--body);letter-spacing:0;text-transform:none;color:var(--ink);cursor:pointer}
+.kit input{width:22px;height:22px;accent-color:var(--accent);flex:none}
+.kit input:checked+span{color:var(--muted);text-decoration:line-through}
+
+/* log */
+.stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px 20px}
+.stats dt{font:500 .7rem/1.2 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.stats dd{font:800 2.4rem/1 var(--display);font-variant-numeric:tabular-nums}
+.empty{padding:18px 0;border-top:2px solid var(--ink);max-width:56ch}
+.goalrow{display:flex;gap:8px;flex-wrap:wrap}
+@media (min-width:560px){
+  .stats{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .card .title{font-size:3.2rem}
+}
+@media (prefers-reduced-motion: reduce){*{scroll-behavior:auto!important}}
+
+.gate{position:fixed;inset:0;z-index:50;background:var(--bg);overflow:auto;display:flex;align-items:center;justify-content:center;padding:24px max(16px,env(safe-area-inset-right,0px)) 24px max(16px,env(safe-area-inset-left,0px))}
+.gate-card{width:100%;max-width:420px;display:flex;flex-direction:column;gap:18px}
+.gate-title{font:800 clamp(2rem,9vw,3rem)/.95 var(--display);margin:0;text-wrap:balance}
+.rlist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.rb.skate{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;background:var(--surface);border-left:6px solid var(--accent);padding:12px 14px}
+.rb.skate.cpt{background:var(--cp);color:var(--on-cp);border-left-color:var(--on-cp)}
+.rb.skate.cpt .rn{color:var(--on-cp)}
+.rb .rbtn{all:unset;box-sizing:border-box;width:100%;display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:12px;align-items:center;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.rb .rbtn:focus-visible{outline:3px solid var(--hot);outline-offset:2px}
+.rb .bx{width:34px;height:34px;border:3px solid currentColor;display:flex;align-items:center;justify-content:center;font:800 1.5rem/1 var(--display)}
+.rb.skate,.rb.slp{display:block}
+.rb.dn .rt,.rb.dn .rr b{text-decoration:line-through;text-decoration-thickness:4px}
+.rb.dn{opacity:.5}
+.where{display:flex;flex-wrap:wrap;gap:12px 24px;align-items:center;padding:10px 0;border-block:2px solid var(--line)}
+.where .wl{display:block;font:500 .7rem/1.2 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.where b{font:800 1.6rem/1.1 var(--display)}
+.where .wv{font:600 1.05rem/1.2 var(--body)}
+.rb .rt{display:block;font:800 clamp(1.5rem,6.5vw,2.1rem)/1 var(--display);letter-spacing:.02em;white-space:nowrap}
+.rb .rn{display:block;margin-top:4px;font:500 .8rem/1.3 var(--body);color:var(--muted)}
+.rb .rr{text-align:right}
+.rb .rr b{display:block;font:800 clamp(2rem,9vw,2.9rem)/.95 var(--display)}
+.rb .rr small{display:block;font:500 .78rem/1.2 var(--mono);opacity:.85}
+.rb.slp{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;background:color-mix(in srgb,var(--hot) 14%,transparent);border-left:6px solid var(--hot);padding:12px 14px}
+.rb.rest{padding:2px 14px 2px 20px;font:500 .8rem/1.4 var(--mono);color:var(--muted)}
+.rb.skate,.rb.slp{display:block}
+.rb.rest.dn{opacity:.35}
+.rb .act{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;padding:10px 0 0 46px}
+.rb .act label{font:500 .7rem/1.2 var(--mono);letter-spacing:.08em;text-transform:uppercase}
+.rb .act input{width:100px;box-sizing:border-box;font:600 1.25rem/1 var(--mono);padding:8px 10px;border:2px solid var(--ink);background:var(--bg);color:var(--ink);border-radius:0}
+.where .wbtns{display:flex;flex-wrap:wrap;gap:8px;align-items:center;width:100%}
+.where .wbtns .wl{margin-right:4px}
+.swbig{font:800 clamp(3.6rem,19vw,5.5rem)/1 var(--display);font-variant-numeric:tabular-nums;text-align:center;margin:10px 0 2px}
+.swlap{display:flex;justify-content:space-between;align-items:baseline;background:var(--surface);border-left:6px solid var(--accent);padding:8px 14px;margin-bottom:12px}
+.swlap span{font:500 .8rem/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.swlap b{font:800 1.9rem/1 var(--display);font-variant-numeric:tabular-nums}
+.swsum{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px 8px;margin:14px 0}
+.swsum dt{font:500 .66rem/1.2 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.swsum dd{margin:2px 0 0;font:800 1.35rem/1.1 var(--display);font-variant-numeric:tabular-nums}
+.swlist{list-style:none;margin:0 0 12px;padding:0;border-top:2px solid var(--ink)}
+.swlist li{display:grid;grid-template-columns:2rem 1fr auto auto;gap:8px;align-items:baseline;padding:10px 2px;border-bottom:1px solid var(--line)}
+.swlist .ln{font:500 .85rem/1 var(--mono);color:var(--muted)}
+.swlist .lt{font:800 1.6rem/1 var(--display);font-variant-numeric:tabular-nums}
+.swlist .lp{font:500 .8rem/1.2 var(--mono);text-align:right}
+.swlist .lp small{display:block;color:var(--muted)}
+.swlist .ls{font:500 .8rem/1 var(--mono);color:var(--muted);min-width:4.2rem;text-align:right}
+.swlist li.best .lt{color:var(--ok)}
+.swlist li.slow .lt{color:var(--hot)}
+.tab{font-size:.9rem;letter-spacing:.04em;padding:12px 2px}
+@media (max-width:380px){.tab{font-size:.8rem;letter-spacing:.02em}}
+@media (max-width:340px){.tab{font-size:.7rem;letter-spacing:0}}
+.bpmbox{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:12px 0 4px}
+.bpmv{text-align:center;flex:1}
+.bpmv b{display:block;font:800 clamp(4rem,22vw,6rem)/.9 var(--display)}
+.bpmv small{font:500 .72rem/1.2 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+#tr-bpm-r,#tr-vol{width:100%}
+.trgo{flex:1;min-height:64px;font-size:1.6rem}
+.chk{display:flex;gap:10px;align-items:center;font:600 1rem/1.2 var(--body);text-transform:none;letter-spacing:0}
+.chk input{width:24px;height:24px}
+select{background:var(--bg);border:1px solid var(--ink);padding:10px;min-height:44px;border-radius:0;font:inherit;color:inherit;width:100%}
+
+</style>
+</head><body>
+<div class="gate" id="gate"><form class="gate-card" id="gate-form" novalidate><p class="eyebrow">Solo 105 · Feb 17–18, 2027</p><h1 class="gate-title">The Cierto 27 Ultraskate Training</h1><div class="field"><label for="gate-pw">Password</label><input type="password" id="gate-pw" autocomplete="off"></div><p class="err" id="gate-err" hidden></p><div class="actions"><button class="btn" type="submit">Unlock</button></div></form></div>
+
+
+<div class="wrap" id="app" hidden>
+  <header class="hero">
+    <p class="eyebrow">24-Hour Ultraskate · Homestead-Miami Speedway · Feb 17–18, 2027</p>
+    <div class="hero-grid">
+      <div>
+        <div class="count" id="h-days">117</div>
+        <div class="count-label" id="h-label">days to the start</div>
+      </div>
+      <dl class="facts" id="h-facts"></dl>
+    </div>
+    <div class="strip" id="strip" aria-hidden="true"></div>
+    <p class="sync" id="sync"></p>
+  </header>
+  <nav class="tabs" id="tabs" aria-label="Sections"></nav>
+  <main id="view"></main>
+</div>
+
+<script>
+(function(){
+"use strict";
+var $=function(s){return document.querySelector(s)};
+var esc=function(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})};
+var DAY=864e5;
+var addDays=function(d,n){var x=new Date(d.getFullYear(),d.getMonth(),d.getDate()+n);return x};
+var sameDay=function(a,b){return a.getFullYear()===b.getFullYear()&&a.getMonth()===b.getMonth()&&a.getDate()===b.getDate()};
+var fmtD=function(d){return d.toLocaleDateString('en-US',{month:'short',day:'numeric'})};
+var fmtDW=function(d){return d.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'})};
+var dur=function(m){return m>=60?Math.floor(m/60)+'h'+(m%60?' '+(m%60)+'m':''):m+' min'};
+var today=function(){var n=new Date();return new Date(n.getFullYear(),n.getMonth(),n.getDate())};
+
+/* ---------- plan data ---------- */
+var START=new Date(2026,9,26), RACE=new Date(2027,1,17);
+var DOW={Mon:0,Tue:1,Wed:2,Thu:3,Fri:4,Sat:5,Sun:6};
+var PHASE={1:'Ankle rebuild',2:'Base',3:'Race-specific',4:'Taper'};
+var T={
+  easy:{l:'Easy ride',mph:5,how:'Relaxed effort on flat, smooth pavement.'},
+  steady:{l:'Steady ride',mph:6.5,how:'Comfortably hard. Smooth and even, no sprints.'},
+  long:{l:'Long ride',mph:5,how:'Easy effort. Eat and drink on a clock, and wear the kit you plan to race in.'},
+  pace:{l:'Race-pace intervals',mph:6.5,how:'Push regular. Smooth, even strokes. Hit the pace in the note, no faster, and take the full easy minutes between reps.'},
+  block:{l:'45/15 race simulation',mph:5,how:'Skate 45 minutes, then stop for 15, and repeat. Eat and drink on the 15, and wear the kit you plan to race in.'},
+  test:{l:'1-hour pace test',mph:8,how:'Warm up 10 minutes easy, then skate 60 minutes as fast as you can hold evenly. Flat, smooth route you can reuse. Log the distance.'},
+  race:{l:'Race day',mph:0,how:'8:00 AM start, 8:00 AM finish. Open the Race day tab for the schedule.'}
+};
+function pmile(mph){return (Math.round(600/mph)/10)+' min'}
+function PI(day,reps,work,wmph,rest){
+  var warm=10,cool=5,m=warm+cool+reps*work+(reps-1)*rest;
+  var mi=(warm+cool+(reps-1)*rest)/60*4.5+reps*work/60*wmph;
+  var core=reps===1?work+' minutes straight':reps+' × '+work+' minutes';
+  var note='Warm up '+warm+' minutes easy. Then '+core+' at '+wmph.toFixed(1)+' mph ('+pmile(wmph)+' per mile)'+(reps>1?', '+rest+' minutes easy between':'')+'. Cool down '+cool+' minutes.';
+  return [day,'pace',m,note,Math.round(mi/(m/60)*100)/100];
+}
+function BL(day,cycles,mph,extra){
+  var m=cycles*60-15,mi=cycles*45/60*mph;
+  var note=cycles+' blocks of 45 minutes on at '+mph.toFixed(1)+' mph ('+pmile(mph)+' per mile), 15 minutes off the board between each. Use the 15 for water, food and stretching, exactly like race day.'+(extra?' '+extra:'');
+  return [day,'block',m,note,Math.round(mi/(m/60)*100)/100];
+}
+var RAW=[
+ [1,1,'Ankle first',[['Mon','easy',45,'Stop the ride if the ankle aches or your stride changes.'],['Wed','easy',60],['Fri','easy',60]]],
+ [2,1,'Add time slowly',[['Mon','easy',60],['Wed','easy',75],['Fri','easy',75]]],
+ [3,1,'Pace test week',[['Mon','easy',60],['Wed','easy',60],['Fri','test',60,'Fresh legs. Pick a route you can reuse for a repeat test later.'],['Sun','long',90,'Easy. Your first ride past an hour in a while.']]],
+ [4,2,'Build begins',[['Mon','easy',90],PI('Wed',4,5,7.0,3),['Fri','easy',90],['Sat','long',150]]],
+ [5,2,'Build',[['Mon','easy',90],PI('Wed',4,6,7.2,3),['Fri','easy',90],['Sat','long',180,'Practice eating something small every 30 minutes.']]],
+ [6,2,'Recovery week',[['Mon','easy',75],PI('Wed',3,5,7.0,3),['Fri','easy',75],['Sat','long',120]]],
+ [7,2,'Build',[['Mon','easy',105],PI('Wed',3,10,7.4,3),['Fri','easy',105],['Sat','long',210]]],
+ [8,2,'Build',[['Mon','easy',120],PI('Wed',3,12,7.5,3),['Fri','easy',120],['Sat','long',240,'Four hours. Note any ankle ache after hour 3.']]],
+ [9,2,'Recovery and checkpoint',[['Mon','easy',75],PI('Wed',2,10,7.4,3),['Fri','easy',75],['Sat','long',180,'Holiday week. Shift days around if you need to.']]],
+ [10,3,'Race-specific starts',[['Mon','easy',120],PI('Wed',3,15,7.6,2),['Fri','easy',120],BL('Sat',5,6.0)]],
+ [11,3,'Night skating',[['Mon','easy',120],PI('Wed',2,20,7.8,3),['Fri','easy',120],BL('Sat',6,6.2,'Start so the last 90 minutes are in the dark, lights on.')]],
+ [12,3,'Recovery week',[['Mon','easy',90],PI('Wed',2,12,7.8,3),['Fri','easy',90],BL('Sat',4,6.2)]],
+ [13,3,'Peak weekend',[['Mon','easy',90],PI('Wed',1,40,8.0,0),BL('Sat',6,6.5,'Dress rehearsal, day 1: crew helping, race food, lights, full kit. Try a 20 minute nap around hour 4.'),BL('Sun',5,6.0,'Day 2 on tired legs. Fix whatever hurt yesterday.')]],
+ [14,3,'Last big week',[['Mon','easy',90],PI('Wed',1,45,8.0,0),['Fri','easy',60],BL('Sat',5,7.0)]],
+ [15,4,'Taper',[['Mon','easy',90],PI('Wed',2,20,8.0,5),['Fri','easy',60],BL('Sat',4,6.5)]],
+ [16,4,'Taper',[['Mon','easy',60],PI('Wed',3,3,8.0,2),['Sat','long',120,'Easy. Check every piece of gear.']]],
+ [17,4,'Race week',[['Mon','easy',30,'Opener. Add four 20-second pickups.'],['Tue','easy',20,'Shakeout on the open track if the speedway allows it. Check the surface and your wheels.'],['Wed','race',1440]]]
+];
+var WK=RAW.map(function(r){
+  var start=addDays(START,7*(r[0]-1));
+  return {n:r[0],ph:r[1],theme:r[2],start:start,end:addDays(start,6),s:r[3].map(function(x){
+    return {id:'w'+r[0]+'-'+x[0],wk:r[0],ph:r[1],d:x[0],t:x[1],m:x[2],mph:x[4]||0,note:x[3]||'',date:addDays(start,DOW[x[0]])};
+  })};
+});
+var SESS=[];WK.forEach(function(w){w.s.forEach(function(x){SESS.push(x)})});
+var BYID={};SESS.forEach(function(x){BYID[x.id]=x});
+var est=function(x){return x.t==='race'?0:x.m/60*(x.mph||T[x.t].mph)};
+var iso=function(d){return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2)};
+var parseISO=function(s){var m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(s||'');return m?new Date(+m[1],+m[2]-1,+m[3]):null};
+var entryDate=function(x,e){return (e&&parseISO(e.dt))||x.date};
+
+var BLOCKS=(function(){
+  var B=[];
+  function cyc(l,k,rl){B.push(['skate',l,45]);B.push([k,rl,15])}
+  cyc('Start easy. Hold back for the first hour.','pit','Water, snack, sunscreen');
+  cyc('Race pace, 7.5 min per mile','pit','Water, fuel, check wheels');
+  cyc('Race pace','pit','Water, salt, sunscreen');
+  cyc('Race pace','meal','Catered lunch, gear check');
+  cyc('Race pace','pit','Shoes off, stretch, then sleep');
+  B.push(['sleep','Sleep 1, in the shade',165]);B.push(['pit','Wake up, stretch, eat',15]);
+  [['pit','Water, fuel'],['pit','Water, fuel, lights check'],['meal','Catered dinner, add layers'],['pit','Water, fuel, lights on'],['pit','Water, fuel'],['pit','Hot drink, add a layer'],['pit','Water, fuel'],['pit','Water, fuel, warm top'],['pit','Water, fuel, wheels check'],['pit','Shoes off, stretch, then sleep']].forEach(function(r,i){cyc(i===0?'Race pace, evening':'Race pace, night',r[0],r[1])});
+  B.push(['sleep','Sleep 2, alarm set, crew wakes you',165]);B.push(['pit','Wake up, hot food, warm up',15]);
+  cyc('Dawn block','pit','Water, fuel');
+  cyc('Race pace','pit','Pit stop');
+  B.push(['skate','Final push. Start your last lap by 7:50 so it finishes before 8:00.',60]);
+  return B;
+})();
+var KL={skate:'Skate',pit:'Pit',meal:'Meal',sleep:'Sleep'};
+var KIT=['Helmet (required on the track)','Head light, board light, spare batteries','Reflective top or vest for night','Spare wheels, bearings and a skate tool','Race food you have already tested on long rides','Electrolytes and water bottles','Sunscreen and lip balm','Warm layers for the night block','Sleep kit: tent, mat, blanket, eye mask','Foot care: spare socks, tape, blister kit','ID or $100 cash for the timing chip deposit','Crew registered ($70) and briefed on the schedule'];
+
+/* ---------- state + persistence ---------- */
+var S0={v:5,done:{},goal:105,kit:{},pace:8,rd:{},act:{},unit:'mi',tr:{bpm:58,vol:0.8,snd:'click',acc:1,pace:8,ft:12,cyc:false,on:45,off:15,sw:0},stw:{run:false,start:0,acc:0,laps:[]},updated:0};
+function norm(o){
+  var r=Object.assign({},S0,o||{},{done:(o&&o.done)||{},kit:(o&&o.kit)||{},rd:(o&&o.rd)||{},act:(o&&o.act)||{},tr:Object.assign({},S0.tr,(o&&o.tr)||{},{cyc:false,sw:0}),stw:swNorm(o&&o.stw)}),d={};
+  Object.keys(r.done).forEach(function(k){var m=/^w(\d+)-(Tue|Thu)$/.exec(k),nk=k;if(m&&+m[1]<=16)nk='w'+m[1]+'-'+(m[2]==='Tue'?'Mon':'Wed');d[nk]=r.done[k]});
+  r.done=d;
+  if(!o||(o.v||0)<3){r.goal=105;r.pace=5.5;r.kit={}}
+  if((o&&o.v||0)<4){r.pace=8}
+  if((o&&o.v||0)<5){r.act={};r.v=5}
+  return r;
+}
+function loadLocal(){try{var r=localStorage.getItem('ultraskate105');if(r)return norm(JSON.parse(r))}catch(e){}return norm()}
+function saveLocal(){try{localStorage.setItem('ultraskate105',JSON.stringify(S))}catch(e){}}
+var S=loadLocal();
+function persist(){S.updated=Date.now();saveLocal()}
+function mut(fn){fn(S);persist();render()}
+
+/* ---------- derived ---------- */
+var tab='today', focus=null, editing=null, openWk={};
+function wkStat(w){
+  var plan=0,logged=0,cnt=0,tot=0;
+  w.s.forEach(function(x){if(x.t==='race')return;tot++;plan+=est(x);var e=S.done[x.id];if(e){cnt++;logged+=e.mi}});
+  return {plan:plan,logged:logged,cnt:cnt,tot:tot};
+}
+function curWk(){var t=today();if(t<START)return 1;if(t>RACE)return 17;return Math.min(17,Math.floor((t-START)/(7*DAY))+1)}
+var TRACK=1.46;
+function lapRange(mi){return Math.floor(mi/TRACK+1e-9)+' laps'}
+function lapsFor(mi){return Math.ceil(mi/TRACK-1e-9)}
+function clock(m){var t=(8*60+m)%1440,h=Math.floor(t/60),mm=t%60,ap=h>=12?'PM':'AM';h=h%12;if(h===0)h=12;return h+':'+(mm<10?'0':'')+mm+' '+ap}
+var skateMin=BLOCKS.reduce(function(a,b){return a+(b[0]==='skate'?b[2]:0)},0);
+function verdict(mph){
+  if(mph>=8.5)return ['ok','On track. 8.5+ fresh for an hour leaves room to hold 8.0 mph in 45-minute blocks.'];
+  if(mph>=7.5)return ['warn','Tight. 8.0 mph blocks are a stretch from here. 105 needs 7.65 mph moving, 100 needs about 7.3. Re-check after Week 13.'];
+  return ['bad','A fresh pace under 7.5 mph makes 8.0 mph blocks a long shot. Plan around 100 or less (about 7.3 mph moving) and keep building.'];
+}
+function ankleChip(a){var m={ok:['Ankle fine','ok'],sore:['Ankle sore','warn'],pain:['Ankle pain','bad']}[a];return m?'<span class="chip '+m[1]+'">'+m[0]+'</span>':''}
+function testEntry(){for(var i=0;i<SESS.length;i++){if(SESS[i].t==='test'&&S.done[SESS[i].id])return {x:SESS[i],e:S.done[SESS[i].id]}}return null}
+function recentPain(){
+  var t=today(),best=null;
+  SESS.forEach(function(x){var e=S.done[x.id];if(e&&(!best||entryDate(x,e)>best.d))best={x:x,e:e,d:entryDate(x,e)}});
+  return best&&best.e.an==='pain'&&(t-best.d)<=7*DAY;
+}
+
+/* ---------- hero + tabs ---------- */
+function renderHero(){
+  var t=today(),days=Math.round((RACE-t)/DAY),k=curWk();
+  var d=$('#h-days'),lab=$('#h-label');
+  if(days>0){d.textContent=days;lab.textContent=days===1?'day to the start':'days to the start'}
+  else if(days===0){d.textContent='0';lab.textContent='race day'}
+  else{d.textContent='Done';lab.textContent='race complete'}
+  var wk=t<START?'Starts '+fmtD(START):(t>RACE?'Finished':'Week '+k+' of 17');
+  $('#h-facts').innerHTML='<div><dt>Goal</dt><dd>'+S.goal+' mi</dd></div><div><dt>Laps</dt><dd>'+lapsFor(S.goal)+' laps</dd></div><div><dt>Plan</dt><dd>'+wk+'</dd></div><div><dt>Track</dt><dd>1.46 mi</dd></div>';
+  var st='';
+  WK.forEach(function(w){var s=wkStat(w);var cls=s.tot&&s.cnt===s.tot?'full':(s.cnt?'part':'');if(w.n===k&&t>=START&&t<=RACE)cls+=' now';st+='<i class="'+cls+'"></i>'});
+  $('#strip').innerHTML=st;
+  $('#sync').textContent='Progress is saved on this device.';
+}
+function renderTabs(){
+  var items=[['today','Today'],['plan','Plan'],['race','Race day'],['trainer','Trainer'],['log','Log']];
+  $('#tabs').innerHTML=items.map(function(i){return '<button class="tab" data-act="tab" data-tab="'+i[0]+'"'+(tab===i[0]?' aria-current="page"':'')+'>'+i[1]+'</button>'}).join('');
+}
+
+/* ---------- Today ---------- */
+function form(x,e){
+  var id=x.id,an=e?e.an:'ok',isT=x.t==='test';
+  var miLabel=isT?'Distance in 60 min (mi)':'Miles skated';
+  return '<form class="log" data-id="'+id+'" novalidate>'+
+    '<div class="fields">'+
+    '<div class="field"><label for="mi-'+id+'">'+miLabel+'</label><input type="number" inputmode="decimal" step="0.1" min="0" id="mi-'+id+'" name="mi" value="'+(e?e.mi:'')+'"></div>'+
+    '<div class="field"><label for="mn-'+id+'">Minutes</label><input type="number" inputmode="numeric" step="1" min="0" id="mn-'+id+'" name="mn" value="'+(e?e.mn:x.m)+'"></div>'+
+    '<div class="field wide"><label for="dt-'+id+'">Day you trained</label><input type="date" id="dt-'+id+'" name="dt" value="'+iso(entryDate(x,e))+'" max="'+iso(today())+'"></div>'+
+    '<fieldset class="field wide"><legend>Right ankle</legend><div class="seg">'+
+    ['ok','sore','pain'].map(function(a){var lb={ok:'Fine',sore:'Sore',pain:'Pain'}[a];return '<input type="radio" name="an" value="'+a+'" id="an-'+a+'-'+id+'"'+(an===a?' checked':'')+'><label for="an-'+a+'-'+id+'">'+lb+'</label>'}).join('')+
+    '</div></fieldset>'+
+    '<div class="field wide"><label for="nt-'+id+'">Note (optional)</label><input type="text" id="nt-'+id+'" name="nt" maxlength="200" value="'+esc(e?e.nt:'')+'"></div>'+
+    '</div><p class="err" hidden></p>'+
+    '<div class="actions"><button class="btn" type="submit">'+(e?'Save changes':'Log this ride')+'</button>'+(e?'<button class="btn ghost" type="button" data-act="cancel">Cancel</button>':'')+'</div></form>';
+}
+function summary(x,e){
+  var mph=e.mi/(e.mn/60),h='<dl class="sum"><div><dt>Miles</dt><dd>'+e.mi.toFixed(1)+'</dd></div><div><dt>Time</dt><dd>'+dur(e.mn)+'</dd></div><div><dt>Avg mph</dt><dd>'+mph.toFixed(1)+'</dd></div></dl>';
+  h+='<div class="actions">'+ankleChip(e.an)+'<span class="chip'+(sameDay(entryDate(x,e),x.date)?'':' hot')+'">Trained '+fmtDW(entryDate(x,e))+'</span></div>';
+  if(e.nt)h+='<p class="note">'+esc(e.nt)+'</p>';
+  if(x.t==='test'){var v=verdict(mph);h+='<div class="verdict '+v[0]+'"><p><b>'+mph.toFixed(1)+' mph fresh.</b> '+v[1]+' Rule of thumb, not a prediction.</p></div>'}
+  h+='<div class="actions"><button class="btn ghost small" data-act="edit" data-id="'+x.id+'">Edit</button><button class="btn ghost small" data-act="clear" data-id="'+x.id+'">Clear log</button></div>';
+  return h;
+}
+function swText(x){
+  if(x.t==='race')return '';
+  if(x.t==='test')return 'Push regular only for the test, so the result can be compared fairly.';
+  if(x.t==='pace')return 'Push regular for the fast reps. Only switch to goofy in the warm-up and cool-down, and only if the ankle feels fine.';
+  var w=x.wk;
+  if(w<=2)return 'Push regular the whole ride. Every 15 minutes, coast for 20 seconds and loosen up the left thigh. Goofy starts in Week 3.';
+  if(recentPain())return 'Your last ride flagged ankle pain. Skip goofy today and push regular only.';
+  if(w===3)return 'First goofy pushes: on flat, smooth pavement, push goofy for 2 minutes after every 20 minutes of regular. Stop goofy for the day if the right ankle feels off.';
+  if(w<=6)return 'Switch your pushing foot every 15 minutes, about 10 regular then 5 goofy. Keep goofy slow and on flat ground.';
+  if(w<=9)return 'Switch every 10 to 15 minutes, about 70% regular and 30% goofy.';
+  if(w<=14)return 'Switch every 10 minutes, about 60% regular and 40% goofy. On long rides, keep switching when you are tired.';
+  return 'Keep the race-day rhythm: switch every 10 to 15 minutes.';
+}
+function card(x,label){
+  var tp=T[x.t],e=S.done[x.id];
+  var meta='<span>Week '+x.wk+'</span><span>'+PHASE[x.ph]+'</span>'+(x.t==='race'?'<span>24 hours</span><span>'+S.goal+' mi goal</span>':'<span>'+dur(x.m)+'</span><span>≈ '+est(x).toFixed(1)+' mi</span>');
+  var body;
+  if(x.t==='race')body='<div class="actions"><button class="btn" data-act="tab" data-tab="race">Open race day schedule</button></div>';
+  else if(e&&editing!==x.id)body=summary(x,e);
+  else body=form(x,e);
+  return '<article class="card"><p class="lbl">'+esc(label)+'</p><h2 class="title">'+tp.l+'</h2><div class="meta">'+meta+'</div><p class="how">'+tp.how+'</p>'+(x.note?'<p class="note">'+esc(x.note)+'</p>':'')+(swText(x)?'<p class="note"><b>Switching.</b> '+esc(swText(x))+'</p>':'')+body+'</article>';
+}
+function weekRows(w){
+  var t=today();
+  return '<ul class="rows">'+w.s.map(function(x){
+    var e=S.done[x.id],st,cls='';
+    if(e){st='✓ '+e.mi.toFixed(1)+' mi';cls='ok'}
+    else if(x.t==='race'){st='Race'}
+    else if(x.date<t){st='Missed';cls='miss'}
+    else st='≈ '+est(x).toFixed(1)+' mi';
+    return '<li><button class="rowbtn" data-act="focus" data-id="'+x.id+'"><span class="d">'+x.d+'</span><span class="t">'+T[x.t].l+' · '+(x.t==='race'?'24h':dur(x.m))+'<small>'+fmtD(e?entryDate(x,e):x.date)+'</small></span><span class="s '+cls+'">'+st+'</span></button></li>';
+  }).join('')+'</ul>';
+}
+function vToday(){
+  var t=today(),h='';
+  if(recentPain())h+='<div class="banner"><p><b>Ankle pain logged on your last ride.</b> Cut the next ride in half or skip it. If it shows up twice in a row, get it looked at before adding distance.</p></div>';
+  if(focus&&BYID[focus]){
+    var f=BYID[focus];
+    h+='<div class="actions"><button class="btn ghost small" data-act="back">Back to today</button></div>'+card(f,'Selected session · '+fmtDW(f.date));
+  }else{
+    var on=SESS.filter(function(x){return sameDay(x.date,t)})[0];
+    if(on)h+=card(on,'Today · '+fmtDW(t));
+    else if(t>RACE)h+='<article class="card"><h2 class="title">Race weekend is behind you</h2><p class="how">Look back through the Log tab.</p></article>';
+    else{
+      var nx=SESS.filter(function(x){return x.date>t})[0];
+      if(nx)h+=card(nx,(t<START?'Plan starts '+fmtDW(START)+' · first session':'Rest day · next up')+' · '+fmtDW(nx.date));
+    }
+  }
+  if(t<=RACE){
+    var w=WK[curWk()-1];
+    h+='<section><h2 class="sec-title">Week '+w.n+(t<START?' preview':'')+' · '+esc(w.theme)+'</h2><p class="sub" style="margin:4px 0 10px">'+fmtD(w.start)+'–'+fmtD(w.end)+'. Tap a session to open or log it.</p>'+weekRows(w)+'</section>';
+  }
+  return h;
+}
+
+/* ---------- Plan ---------- */
+function vPlan(){
+  var te=testEntry(),t3=BYID['w3-Fri'],t8=BYID['w8-Sat'],e8=S.done['w8-Sat'];
+  var CPT={3:'Pace test',9:'Ankle review',13:'Pick your goal'};
+  function cpBlock(n){
+    var b='<div class="cpbox"><p class="cpk">Checkpoint</p><h3>'+CPT[n]+'</h3>';
+    if(n===3){
+      b+='<p class="when">'+fmtDW(t3.date)+'</p>';
+      if(te){var mph=te.e.mi/(te.e.mn/60),v=verdict(mph);b+='<p><span class="chip '+v[0]+'">'+mph.toFixed(1)+' mph</span> '+v[1]+'</p>'}
+      else b+='<p>One hour, as fast as you can hold evenly. This tells us whether 8 mph in 45-minute blocks is realistic.</p>';
+    }else if(n===9){
+      b+='<p class="when">After the 4-hour ride on '+fmtDW(t8.date)+'</p>';
+      if(e8)b+='<p>'+ankleChip(e8.an)+' '+(e8.an==='ok'?'Clear to keep building.':'Hold the long rides at this length until the ankle settles.')+'</p>';
+      else b+='<p>Any ache after hour 3? If yes, hold the long rides where they are.</p>';
+    }else{
+      b+='<p class="when">After the back-to-back weekend, Jan 23\u201324</p><p>Pick 105 only if the Week 13 Wednesday session (40 minutes at 8.0 mph) felt controlled and you could still ride the next day. If you fought it, choose 100 (about 7.3 mph moving, more margin).</p><div class="goalrow">'+
+        [105,100].map(function(g){return '<button class="btn small'+(S.goal===g?'':' ghost')+'" data-act="goal" data-val="'+g+'" aria-pressed="'+(S.goal===g)+'">'+g+' miles</button>'}).join('')+'</div>';
+    }
+    return b+'</div>';
+  }
+  var h='';
+
+  var k=curWk(),t=today(),maxP=0;
+  WK.forEach(function(w){maxP=Math.max(maxP,wkStat(w).plan,wkStat(w).logged)});
+  h+='<section><h2 class="sec-title">Weekly miles</h2><p class="sub" style="margin:4px 0 10px">Gray is planned. Blue is what you logged. Estimates use 5 mph for easy and long rides and the stated pace for interval and race-simulation sessions.</p><div class="bars">';
+  WK.forEach(function(w){var s=wkStat(w),ph=maxP?s.plan/maxP*100:0,lg=s.plan?Math.min(100,s.logged/s.plan*100):0;
+    h+='<div class="bcol'+((w.n===k&&t>=START&&t<=RACE)?' now':'')+'"><div class="bar" style="height:'+ph.toFixed(1)+'%" title="Week '+w.n+': '+s.plan.toFixed(0)+' mi planned"><i style="height:'+lg.toFixed(1)+'%"></i></div></div>'});
+  h+='</div><div class="bnums">'+WK.map(function(w){return '<span>'+w.n+'</span>'}).join('')+'</div></section>';
+
+  var lastPh=0;
+  h+='<section>';
+  WK.forEach(function(w){
+    if(w.ph!==lastPh){
+      lastPh=w.ph;var ws=WK.filter(function(z){return z.ph===w.ph});
+      h+='<h3 class="phase">Phase '+w.ph+' · '+PHASE[w.ph]+' <span>Wk '+ws[0].n+'–'+ws[ws.length-1].n+'</span></h3>';
+    }
+    var s=wkStat(w),open=openWk[w.n]!==undefined?openWk[w.n]:(w.n===k);
+    h+='<details class="wk'+(CPT[w.n]?' cpw':'')+'" data-wk="'+w.n+'"'+(open?' open':'')+'><summary><span class="wn">'+(w.n<10?'0':'')+w.n+'</span><span class="wmid"><b>'+esc(w.theme)+'</b><small>'+fmtD(w.start)+'–'+fmtD(w.end)+' · '+s.cnt+'/'+s.tot+' logged'+(CPT[w.n]?' \u00b7 Checkpoint: '+CPT[w.n]:'')+'</small></span><span class="wm">'+(w.n===17?'Race':s.plan.toFixed(0)+' mi')+'</span></summary>'+(CPT[w.n]?cpBlock(w.n):'')+weekRows(w)+'</details>';
+  });
+  return h+'</section>';
+}
+
+/* ---------- Race day ---------- */
+function rowsFor(){var t=0,mi=0,rows=[];BLOCKS.forEach(function(b){var a=t;t+=b[2];if(b[0]==='skate')mi+=b[2]/60*S.pace;rows.push({k:b[0],l:b[1],a:a,b:t,mi:mi})});return rows}
+function actVal(i){var v=S.act[i];if(v==null)return '';return String(S.unit==='laps'?Math.round(v/TRACK*100)/100:Math.round(v*100)/100)}
+function cumAct(i){var t=0;for(var j=0;j<=i;j++){if(S.act[j]!=null)t+=S.act[j]}return t}
+function varHTML(i,r){var v=S.act[i];if(v==null)return '';var cum=cumAct(i),d=cum-r.mi,c=d>=-0.05?'ok':(d>=-2?'warn':'bad');return '<span class="tot">Total so far <b>'+cum.toFixed(1)+' mi</b> ('+Math.floor(cum/TRACK+1e-9)+' laps)</span><span class="chip '+c+'">'+(d>=0?'+':'−')+Math.abs(d).toFixed(1)+' mi vs plan</span>'}
+function whereHTML(){
+  var rows=rowsFor(),nb=0,nd=0,last=null,la=null;
+  rows.forEach(function(r,i){if(r.k!=='skate')return;nb++;if(S.rd[i]){nd++;last=r}if(S.act[i]!=null)la={r:r,v:cumAct(i)}});
+  var fin=rows[rows.length-1].mi,h='<div class="where" id="where"><div><span class="wl">Blocks crossed off</span><b>'+nd+' of '+nb+'</b></div>';
+  if(la){
+    var d=la.v-la.r.mi,c=d>=-0.05?'ok':(d>=-2?'warn':'bad'),proj=la.r.mi>0?la.v/la.r.mi*fin:0,pl=Math.floor(proj/TRACK+1e-9),need=lapsFor(S.goal);
+    h+='<div><span class="wl">Total skated vs plan</span><span class="wv"><b>'+la.v.toFixed(1)+'</b> ('+Math.floor(la.v/TRACK+1e-9)+' laps) vs '+la.r.mi.toFixed(1)+' mi <span class="chip '+c+'">'+(d>=0?'+':'\u2212')+Math.abs(d).toFixed(1)+'</span></span></div>';
+    h+='<div><span class="wl">On this pace</span><span class="wv"><b>'+proj.toFixed(1)+' mi</b> ('+pl+' laps) <span class="chip '+(pl>=need?'ok':'bad')+'">'+(pl>=need?'goal met':(need-pl)+' laps short')+'</span></span></div>';
+  }else h+='<div><span class="wl">Total skated</span><span class="wv">'+(last?'<b>0.0 mi</b> logged, '+last.mi.toFixed(1)+' planned':'Not started')+'</span></div>';
+  h+='<div class="wbtns"><span class="wl">Enter blocks as</span><button type="button" class="btn small'+(S.unit==='laps'?' ghost':'')+'" data-act="unit" data-val="mi" aria-pressed="'+(S.unit!=='laps')+'">Miles</button><button type="button" class="btn small'+(S.unit==='laps'?'':' ghost')+'" data-act="unit" data-val="laps" aria-pressed="'+(S.unit==='laps')+'">Laps</button><button type="button" class="btn ghost small" data-act="rdclear">Clear</button></div></div>';
+  return h;
+}
+function refreshRow(i){
+  var rows=rowsFor(),r=rows[i],li=document.querySelector('li[data-li="'+i+'"]');if(!li)return;
+  var dn=!!S.rd[i];li.classList.toggle('dn',dn);
+  var bt=li.querySelector('.rbtn');if(bt){bt.setAttribute('aria-pressed',dn);li.querySelector('.bx').textContent=dn?'\u2715':''}
+  var nx=li.nextElementSibling;if(nx&&nx.classList.contains('rest'))nx.classList.toggle('dn',dn);
+  rows.forEach(function(rr,j){if(rr.k!=='skate')return;var lj=document.querySelector('li[data-li="'+j+'"] .vr');if(lj)lj.innerHTML=varHTML(j,rr)});
+  var w=document.getElementById('where');if(w)w.outerHTML=whereHTML();
+}
+function raceDyn(){
+  var pace=S.pace,t=0,mi=0,rows=[],pts=[[0,0]],sleeps=[];
+  BLOCKS.forEach(function(b){var a=t;t+=b[2];if(b[0]==='skate')mi+=b[2]/60*pace;if(b[0]==='sleep')sleeps.push([a,t]);rows.push({k:b[0],l:b[1],a:a,b:t,mi:mi});pts.push([t,mi])});
+  var need=lapsFor(S.goal)*TRACK/(skateMin/60);
+  var W=640,H=250,L=36,R=58,TT=14,B=26,ymax=130;
+  var x=function(m){return L+(W-L-R)*m/1440},y=function(v){return TT+(H-TT-B)*(1-v/ymax)};
+  var g='<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Cumulative miles over the 24 hours at '+pace.toFixed(2)+' mph moving pace, ending at '+mi.toFixed(1)+' miles">';
+  sleeps.forEach(function(s,i){g+='<rect class="zz" x="'+x(s[0]).toFixed(1)+'" y="'+TT+'" width="'+(x(s[1])-x(s[0])).toFixed(1)+'" height="'+(H-TT-B)+'"/>'});
+  [0,25,50,75,100,125].forEach(function(v){g+='<line class="ax" x1="'+L+'" x2="'+(W-R)+'" y1="'+y(v).toFixed(1)+'" y2="'+y(v).toFixed(1)+'"/><text class="gt" x="'+(L-6)+'" y="'+(y(v)+3).toFixed(1)+'" text-anchor="end">'+v+'</text>'});
+  for(var m=0;m<=1440;m+=240){var hh=(8+m/60)%24,lb=(hh%12===0?12:hh%12)+(hh>=12?'p':'a');g+='<text class="gt" x="'+x(m).toFixed(1)+'" y="'+(H-8)+'" text-anchor="'+(m===0?'start':(m===1440?'end':'middle'))+'">'+lb+'</text>'}
+  g+='<line class="axk" x1="'+L+'" x2="'+(W-R)+'" y1="'+y(0).toFixed(1)+'" y2="'+y(0).toFixed(1)+'"/>';
+  g+='<line class="tg" x1="'+L+'" x2="'+(W-R)+'" y1="'+y(S.goal).toFixed(1)+'" y2="'+y(S.goal).toFixed(1)+'"/><text class="gt hot" x="'+(L+6)+'" y="'+(y(S.goal)-5).toFixed(1)+'">goal '+S.goal+'</text>';
+  g+='<polyline class="ln" points="'+pts.map(function(p){return x(p[0]).toFixed(1)+','+y(p[1]).toFixed(1)}).join(' ')+'"/>';
+  g+='<text class="gt end" x="'+(W-R+6)+'" y="'+(y(mi)+4).toFixed(1)+'">'+mi.toFixed(1)+' mi</text></svg>';
+  var out='<div class="paceval"><div class="big">'+mi.toFixed(1)+'<small>miles</small></div><p class="sub">'+lapRange(mi)+' · need <b class="mono">'+need.toFixed(2)+' mph</b> moving for '+S.goal+'</p></div>';
+  var ls=Math.round(3600*TRACK/pace),lapT=Math.floor(ls/60)+' min '+(ls%60)+' sec';
+  var prev=0,list='',nb=0,nd=0,lastDone=null;
+  rows.forEach(function(r,i){if(r.k==='skate'){nb++;if(S.rd[i]){nd++;lastDone=r}}});
+  rows.forEach(function(r,i){
+    var tm=clock(r.a).replace(' AM','a').replace(' PM','p')+' \u2013 '+clock(r.b).replace(' AM','a').replace(' PM','p');
+    var dn=!!S.rd[i];
+    if(r.k==='skate'){
+      var cp=Math.floor(r.mi/25+1e-9)>Math.floor(prev/25+1e-9),laps=Math.floor(r.mi/TRACK+1e-9);
+      list+='<li data-li="'+i+'" class="rb skate'+(cp?' cpt':'')+(dn?' dn':'')+'"><button type="button" class="rbtn" data-act="blk" data-i="'+i+'" aria-pressed="'+dn+'" aria-label="Cross off '+tm+'"><span class="bx" aria-hidden="true">'+(dn?'\u2715':'')+'</span><span class="rl"><span class="rt">'+tm+'</span><span class="rn">'+esc(r.l)+(cp?' \u00b7 '+(Math.floor(r.mi/25)*25)+' mi mark':'')+'</span></span><span class="rr"><b>'+r.mi.toFixed(1)+'</b><small>mi \u00b7 '+laps+' laps</small></span></button><div class="act"><label for="a'+i+'">'+(S.unit==='laps'?'Laps':'Miles')+' skated this block</label><input id="a'+i+'" type="number" inputmode="decimal" min="0" step="0.1" data-ai="'+i+'" value="'+actVal(i)+'" placeholder="'+(S.unit==='laps'?((r.b-r.a)/60*pace/TRACK).toFixed(1):((r.b-r.a)/60*pace).toFixed(1))+'"><span class="vr">'+varHTML(i,r)+'</span></div></li>';
+    }else if(r.k==='sleep'){
+      list+='<li data-li="'+i+'" class="rb slp'+(dn?' dn':'')+'"><button type="button" class="rbtn" data-act="blk" data-i="'+i+'" aria-pressed="'+dn+'" aria-label="Cross off sleep"><span class="bx" aria-hidden="true">'+(dn?'\u2715':'')+'</span><span class="rl"><span class="rt">'+tm+'</span><span class="rn">SLEEP \u00b7 '+dur(r.b-r.a)+'</span></span><span class="rr"><small>'+r.mi.toFixed(1)+' mi banked</small></span></button></li>';
+    }else{
+      var pd=rows[i-1]&&S.rd[i-1];
+      list+='<li data-li="'+i+'" class="rb rest'+(pd?' dn':'')+'"><span>'+clock(r.a).replace(' AM','a').replace(' PM','p')+' \u00b7 '+(r.k==='meal'?'MEAL':'REST')+' '+(r.b-r.a)+' min \u00b7 '+esc(r.l)+'</span></li>';
+    }
+    prev=r.mi;
+  });
+  out+=whereHTML();
+  out+='<p class="sub">Tap a block when you finish it to cross it off, and type the miles you skated in that block. The app adds them up for a running total and compares it with the plan. The big number is the total miles you should have when that block ends. Lap time at this pace: <b class="mono">'+lapT+'</b>. Green rows pass a 25 mile mark.</p><ul class="rlist">'+list+'</ul>';
+  return out;
+}
+function vRace(){
+  var h='<section class="pace"><h2 class="sec-title">24 hours, 8 AM to 8 AM</h2><p class="sub">Wed Feb 17 to Thu Feb 18. The plan is 45 minutes skating at 7.5 min per mile (8.0 mph), then 15 minutes off, all day, with two 3-hour sleeps. Move the slider to see what a slower or faster pace does to your miles.</p>'+
+   '<label for="pace">Moving pace: <b class="mono" id="paceout">'+S.pace.toFixed(2)+' mph · '+pmile(S.pace)+'/mile</b></label>'+
+   '<input type="range" id="pace" min="4" max="9" step="0.05" value="'+S.pace+'">'+
+   '<div class="actions"><button class="btn ghost small" data-act="pace" data-val="8">8.00 plan (7.5 min/mile)</button><button class="btn ghost small" data-act="pace" data-val="'+(Math.ceil(lapsFor(S.goal)*TRACK/(skateMin/60)*100)/100)+'">Pace for '+S.goal+'</button></div></section>';
+  h+='<section id="race-dyn" style="display:flex;flex-direction:column;gap:16px">'+raceDyn()+'</section>';
+  h+='<section><h2 class="sec-title">Rules to remember</h2><ul class="plain" style="margin-top:10px"><li>Core race pace: 7.5 min per mile (8.0 mph) for 45 minutes, then 15 minutes off the board, repeated all day. The 15 is for water, food, shoes and the toilet, so do not stretch it.</li><li>Only full laps count, and a lap is 1.46 miles (the outer ring). A lap you have not finished at 8:00 AM does not count.</li><li>The goal in laps: 100 miles takes 69 laps (100.74 mi). 105 miles takes 72 laps (105.12 mi).</li><li>Helmet on whenever you are on the track.</li><li>Switch your pushing foot every 15 to 20 minutes so neither leg works alone for 24 hours. Stop goofy if the right ankle complains.</li><li>Your crew works from Pit Road only, never on the track.</li><li>Wear a number on your back. The timing chip goes on your ankle strap.</li><li>The site mentions Monday night gates, but Feb 17 is a Wednesday. Ask the race directors which night camping opens.</li></ul></section>';
+  h+='<section><h2 class="sec-title">Race kit</h2><ul class="rows kit" style="margin-top:10px">'+KIT.map(function(k,i){return '<li><label for="kit'+i+'"><input type="checkbox" id="kit'+i+'" data-kit="'+i+'"'+(S.kit[i]?' checked':'')+'><span>'+esc(k)+'</span></label></li>'}).join('')+'</ul></section>';
+  return h;
+}
+
+/* ---------- Log ---------- */
+function vLog(){
+  var ents=[];SESS.forEach(function(x){if(S.done[x.id])ents.push({x:x,e:S.done[x.id]})});
+  ents.sort(function(a,b){return entryDate(b.x,b.e)-entryDate(a.x,a.e)});
+  var mi=0,mn=0,long=0,sess=SESS.filter(function(x){return x.t!=='race'}).length;
+  ents.forEach(function(r){mi+=r.e.mi;mn+=r.e.mn;if(r.e.mi>long)long=r.e.mi});
+  var h='<section><h2 class="sec-title">Totals</h2><dl class="stats" style="margin-top:12px"><div><dt>Rides logged</dt><dd>'+ents.length+' / '+sess+'</dd></div><div><dt>Miles</dt><dd>'+mi.toFixed(0)+'</dd></div><div><dt>Hours</dt><dd>'+(mn/60).toFixed(1)+'</dd></div><div><dt>Longest ride</dt><dd>'+(long?long.toFixed(1)+' mi':'—')+'</dd></div></dl></section>';
+  if(!ents.length){
+    var first=SESS[0];
+    h+='<div class="empty"><h3 class="sec-title">Nothing logged yet</h3><p class="how" style="margin-top:8px">Your first session is '+fmtDW(first.date)+': '+T[first.t].l.toLowerCase()+', '+dur(first.m)+'. Log it from the Today tab and it will show up here.</p></div>';
+  }else{
+    h+='<section><h2 class="sec-title">History</h2><ul class="rows" style="margin-top:10px">'+ents.map(function(r){
+      return '<li><button class="rowbtn" data-act="focus" data-id="'+r.x.id+'"><span class="d">'+r.x.d+'</span><span class="t">'+T[r.x.t].l+' · '+dur(r.e.mn)+'<small>'+fmtD(entryDate(r.x,r.e))+' · Wk '+r.x.wk+(r.e.nt?' · '+esc(r.e.nt):'')+'</small></span><span class="s">'+r.e.mi.toFixed(1)+' mi<br>'+ankleChip(r.e.an)+'</span></button></li>';
+    }).join('')+'</ul></section>';
+  }
+  return h;
+}
+
+/* ---------- render + events ---------- */
+/* ---------- Trainer: metronome ---------- */
+var TR={swNodes:[],ctx:null,master:null,cg:null,src:null,run:false,t0:0,nodes:[],wake:null,taps:[],ui:null};
+var TRD={bpm:58,vol:0.8,snd:'click',acc:1,pace:8,ft:12,cyc:false,on:45,off:15,sw:0};
+function trN(v,a,b,d){v=parseFloat(v);if(!(v>=a))v=d;return Math.min(b,v)}
+function trFt(){return TRACK*5280}
+function trSynth(sr,freq,len,amp,kind){
+  var n=Math.floor(sr*len),a=new Float32Array(n),att=Math.max(1,Math.floor(sr*0.002));
+  for(var i=0;i<n;i++){
+    var t=i/sr,env=Math.exp(-t/(len/(kind==='beep'?3:5)))*(i<att?i/att:1),ph=2*Math.PI*freq*t,w=Math.sin(ph);
+    if(kind==='wood')w=Math.sin(ph)+0.5*Math.sin(ph*2.76);
+    if(kind==='beep'&&i>n-att*3)env*=(n-i)/(att*3);
+    a[i]=w*env*amp;
+  }
+  return a;
+}
+function trBuf(){
+  var ctx=TR.ctx,sr=ctx.sampleRate,T=S.tr,per=60/T.bpm*sr,n=T.acc>1?T.acc:1,nb=n*Math.ceil(8/n),total=Math.round(per*nb);
+  var buf=ctx.createBuffer(1,total,sr),d=buf.getChannelData(0);
+  var spec={click:[1800,0.03,'click'],wood:[900,0.09,'wood'],beep:[880,0.11,'beep']}[T.snd]||[1800,0.03,'click'];
+  for(var k=0;k<nb;k++){
+    var acc=T.acc>1&&k%T.acc===0,amp=T.acc>1?(acc?1:0.55):0.9;
+    var s=trSynth(sr,spec[0]*(acc?1.5:1),spec[1],amp,spec[2]),at=Math.round(k*per);
+    for(var i=0;i<s.length&&at+i<total;i++)d[at+i]+=s[i];
+  }
+  return buf;
+}
+function trSource(when){
+  var ctx=TR.ctx,old=TR.src,s=ctx.createBufferSource();
+  s.buffer=trBuf();s.loop=true;s.connect(TR.cg);s.start(when||ctx.currentTime+0.02);
+  if(old){try{old.stop()}catch(e){}}
+  TR.src=s;
+}
+function trTone(t,freq,dur,vol,list){
+  var ctx=TR.ctx,o=ctx.createOscillator(),g=ctx.createGain();
+  o.type='sine';o.frequency.value=freq;
+  g.gain.setValueAtTime(0.0001,t);g.gain.linearRampToValueAtTime(vol,t+0.01);g.gain.setValueAtTime(vol,t+dur-0.03);g.gain.linearRampToValueAtTime(0.0001,t+dur);
+  o.connect(g);g.connect(TR.master);o.start(t);o.stop(t+dur+0.02);(list||TR.nodes).push(o);
+}
+function trChime(t,kind,L){
+  if(kind==='go'){trTone(t,660,0.18,0.9,L);trTone(t+0.24,880,0.3,0.9,L)}
+  else if(kind==='rest'){trTone(t,880,0.18,0.9,L);trTone(t+0.24,660,0.3,0.9,L)}
+  else{trTone(t,1250,0.1,0.8,L);trTone(t+0.16,1250,0.1,0.8,L)}
+}
+function trMeasSec(){return 4*60/S.tr.bpm}
+function trSchedSw(from){
+  TR.swNodes.forEach(function(n){try{n.stop()}catch(e){}});TR.swNodes=[];
+  var T=S.tr;if(!(T.sw>0))return;
+  var iv=T.sw*trMeasSec(),H=25*3600,t0=TR.t0,wins=[];
+  if(T.cyc){var on=T.on*60,per=on+T.off*60;for(var c=0;c<60&&c*per<H;c++)wins.push([t0+c*per,t0+c*per+on])}
+  else wins.push([t0,t0+H]);
+  var n=0;
+  wins.forEach(function(w){
+    if(w[1]<=from)return;
+    var an=Math.max(w[0],from);
+    for(var t=an+iv;t<w[1]-20&&n<400;t+=iv,n++)trChime(t,'sw',TR.swNodes);
+  });
+}
+function trSchedule(){
+  var T=S.tr,t0=TR.t0,H=25*3600;
+  TR.cg.gain.cancelScheduledValues(0);TR.cg.gain.setValueAtTime(1,Math.max(0,t0-0.01));
+  if(T.cyc){
+    var on=T.on*60,off=T.off*60,per=on+off,cnt=Math.ceil(H/per);
+    for(var c=0;c<cnt&&c<60;c++){
+      var st=t0+c*per;
+      TR.cg.gain.setValueAtTime(1,st);TR.cg.gain.setValueAtTime(0,st+on);
+      trChime(st,'go');trChime(st+on,'rest');
+    }
+  }
+}
+function trWake(on){
+  if(!('wakeLock' in navigator))return;
+  if(on){navigator.wakeLock.request('screen').then(function(l){TR.wake=l;l.addEventListener('release',function(){TR.wake=null})}).catch(function(){})}
+  else if(TR.wake){TR.wake.release().catch(function(){});TR.wake=null}
+}
+function trStart(){
+  var AC=window.AudioContext||window.webkitAudioContext;
+  if(!AC){var st=$('#tr-status');if(st)st.textContent='This browser cannot play audio from a web page.';return}
+  if(!TR.ctx||TR.ctx.state==='closed')TR.ctx=new AC();
+  var ctx=TR.ctx;ctx.resume();
+  TR.master=ctx.createGain();TR.master.gain.value=S.tr.vol;TR.master.connect(ctx.destination);
+  TR.cg=ctx.createGain();TR.cg.connect(TR.master);TR.nodes=[];TR.swNodes=[];TR.src=null;
+  TR.t0=ctx.currentTime+0.2;
+  trSource(TR.t0);trSchedule();trSchedSw(TR.t0);
+  TR.run=true;trWake(true);
+  clearInterval(TR.ui);TR.ui=setInterval(trRefresh,250);
+  trRefresh();
+}
+function trStop(){
+  TR.run=false;clearInterval(TR.ui);TR.ui=null;
+  TR.nodes.forEach(function(n){try{n.stop()}catch(e){}});TR.nodes=[];TR.swNodes.forEach(function(n){try{n.stop()}catch(e){}});TR.swNodes=[];
+  if(TR.src){try{TR.src.stop()}catch(e){}TR.src=null}
+  if(TR.master){try{TR.master.disconnect()}catch(e){}}
+  if(TR.ctx&&TR.ctx.suspend)TR.ctx.suspend();
+  if(!S.stw.run)trWake(false);trRefresh();
+}
+function trMMSS(s){s=Math.max(0,Math.ceil(s));var m=Math.floor(s/60),x=s%60;return m+':'+(x<10?'0':'')+x}
+function trRefresh(){
+  var T=S.tr,el;
+  if(!document.getElementById('tr-bpm'))return;
+  $('#tr-bpm').textContent=T.bpm;$('#tr-bpm-r').value=T.bpm;
+  var go=$('#tr-go');go.textContent=TR.run?'Stop':'Start';go.setAttribute('aria-pressed',TR.run);
+  var st='Stopped.';
+  if(TR.run&&TR.ctx){
+    var e=TR.ctx.currentTime-TR.t0;
+    if(TR.ctx.state!=='running')st='Paused by the browser. Tap Start again if it stays silent.';
+    else if(T.cyc){
+      var on=T.on*60,per=on+T.off*60;
+      if(e<0)st='Starting...';
+      else{var p=e%per,blk=Math.floor(e/per)+1;st=p<on?'ON · '+trMMSS(on-p)+' left · block '+blk:'REST · '+trMMSS(per-p)+' left · next block '+(blk+1)}
+    }else st='Playing at '+T.bpm+' beats per minute.';
+  }
+  $('#tr-status').textContent=st;
+  var cy=document.querySelectorAll('[data-tr="snd"],[data-tr="acc"]');
+  cy.forEach(function(b){var on=(b.dataset.tr==='snd'?T.snd===b.dataset.v:String(T.acc)===b.dataset.v);b.classList.toggle('ghost',!on);b.setAttribute('aria-pressed',on)});
+}
+function trSetBpm(v){
+  S.tr.bpm=Math.round(trN(v,30,140,S.tr.bpm));persist();
+  if(TR.run){trSource();trSchedSw(TR.ctx.currentTime)}
+  trRefresh();
+}
+function vTrainer(){
+  var T=S.tr;
+  var h='<section><h2 class="sec-title">Trainer</h2><p class="sub">A metronome for your pushing. One beat is one push. It plays through this page, so Spotify can keep playing underneath. Keep this page open, and keep the volume of each where you can hear both.</p>';
+  h+='<div class="bpmbox"><button class="btn ghost small" data-tr="bpm" data-v="-5">−5</button><button class="btn ghost small" data-tr="bpm" data-v="-1">−1</button><div class="bpmv"><b id="tr-bpm">'+T.bpm+'</b><small>beats per min</small></div><button class="btn ghost small" data-tr="bpm" data-v="1">+1</button><button class="btn ghost small" data-tr="bpm" data-v="5">+5</button></div>';
+  h+='<input type="range" id="tr-bpm-r" min="30" max="140" step="1" value="'+T.bpm+'" data-tr="bpmr" aria-label="Beats per minute">';
+  h+='<div class="actions"><button class="btn trgo" id="tr-go" data-tr="go" aria-pressed="false">Start</button><button class="btn ghost" data-tr="tap">Tap tempo</button></div><p class="sub" id="tr-status" aria-live="polite">Stopped.</p></section>';
+  h+='<section><h2 class="sec-title">Sound</h2><div class="actions">'+[['click','Click'],['wood','Wood'],['beep','Beep']].map(function(x){return '<button class="btn small ghost" data-tr="snd" data-v="'+x[0]+'">'+x[1]+'</button>'}).join('')+'</div>';
+  h+='<p class="sub" style="margin-top:12px">Accent every</p><div class="actions">'+[['1','Off'],['2','2 beats'],['3','3 beats'],['4','4 beats'],['8','8 beats']].map(function(x){return '<button class="btn small ghost" data-tr="acc" data-v="'+x[0]+'">'+x[1]+'</button>'}).join('')+'</div>';
+  h+='<div class="field" style="margin-top:12px"><label for="tr-vol">Metronome volume</label><input type="range" id="tr-vol" min="0.1" max="1" step="0.05" value="'+T.vol+'" data-tr="vol"></div></section>';
+  h+='<section id="sw"><h2 class="sec-title">Stopwatch</h2><div class="swbig" id="sw-big">00:00.0</div><div class="swlap"><span>Lap <b id="sw-n">1</b></span><b id="sw-cur">00:00.0</b></div>'+
+    '<div class="actions"><button class="btn trgo" id="sw-go" data-tr="sw-go">Start</button><button class="btn ghost trgo" id="sw-lapb" data-tr="sw-lap">Lap</button></div>'+
+    '<dl class="swsum" id="sw-sum"></dl><ul class="swlist" id="sw-list"></ul>'+
+    '<div class="actions"><button class="btn ghost small" data-tr="sw-reset">Reset</button></div></section>';
+  return h;
+}
+document.addEventListener('click',function(e){
+  var b=e.target.closest('[data-tr]');if(!b||b.tagName==='INPUT'||b.tagName==='SELECT')return;
+  var a=b.dataset.tr,v=b.dataset.v,T=S.tr;
+  if(a==='bpm')trSetBpm(T.bpm+parseInt(v,10));
+  else if(a==='go'){if(TR.run)trStop();else trStart()}
+  else if(a==='tap'){
+    var n=performance.now();
+    if(TR.taps.length&&n-TR.taps[TR.taps.length-1]>2500)TR.taps=[];
+    TR.taps.push(n);if(TR.taps.length>7)TR.taps.shift();
+    if(TR.taps.length>=3){var iv=(TR.taps[TR.taps.length-1]-TR.taps[0])/(TR.taps.length-1);trSetBpm(60000/iv)}
+  }
+  else if(a==='sw-go'){swGo()}
+  else if(a==='sw-lap'){swLap()}
+  else if(a==='sw-reset'){swReset()}
+  else if(a==='snd'){T.snd=v;persist();if(TR.run)trSource();trRefresh()}
+  else if(a==='acc'){T.acc=parseInt(v,10);persist();if(TR.run)trSource();trRefresh()}
+  else if(a==='usepace'){trSetBpm(T.pace*5280/60/T.ft)}
+  else if(a==='racepace'){T.pace=Math.round(S.pace*100)/100;var pi=$('#tr-pace');if(pi)pi.value=T.pace;persist();trRefresh();trSetBpm(T.pace*5280/60/T.ft)}
+});
+function trInput(e){
+  var t=e.target,k=t.dataset&&t.dataset.tr;if(!k||t.tagName==='BUTTON')return;
+  var T=S.tr;
+  if(k==='bpmr'){trSetBpm(t.value)}
+  else if(k==='vol'){T.vol=trN(t.value,0.1,1,0.8);if(TR.master)TR.master.gain.setTargetAtTime(T.vol,TR.ctx.currentTime,0.02);persist()}
+  else if(k==='pace'){T.pace=trN(t.value,3,12,8);persist();trRefresh()}
+  else if(k==='ft'){T.ft=trN(t.value,3,40,12);persist();trRefresh()}
+  else if(k==='ppl'){var p=trN(t.value,100,2000,0);if(p>0){T.ft=Math.round(trFt()/p*10)/10;var f=$('#tr-ft');if(f)f.value=T.ft;persist();trRefresh()}}
+}
+document.addEventListener('input',trInput);
+document.addEventListener('change',function(e){
+  var t=e.target,k=t.dataset&&t.dataset.tr;if(!k)return;var T=S.tr;
+  if(k==='pace'||k==='ft'){trRefresh()}
+});
+swLoop();
+document.addEventListener('visibilitychange',function(){
+  if(document.visibilityState==='visible')swTick();
+  if(document.visibilityState==='visible'&&TR.run){
+    if(TR.ctx&&TR.ctx.state!=='running')TR.ctx.resume();
+    if(!TR.wake)trWake(true);
+  }
+});
+
+/* ---------- Stopwatch ---------- */
+function swNorm(x){x=x||{};return {run:!!x.run,start:+x.start||0,acc:+x.acc||0,laps:Array.isArray(x.laps)?x.laps.slice():[]}}
+function swEl(){var w=S.stw;return w.acc+(w.run?Date.now()-w.start:0)}
+function swF(ms,long){
+  var d=Math.floor(Math.max(0,ms)/100),h=Math.floor(d/36000),m=Math.floor(d%36000/600),s=Math.floor(d%600/10),t=d%10;
+  var p=function(n){return (n<10?'0':'')+n};
+  return h>0?h+':'+p(m)+':'+p(s)+(long?'.'+t:''):p(m)+':'+p(s)+'.'+t;
+}
+function swTimes(){var p=0;return S.stw.laps.map(function(t){var d=t-p;p=t;return d})}
+function swTick(){
+  var b=document.getElementById('sw-big');if(!b)return;
+  var e=swEl(),last=S.stw.laps.length?S.stw.laps[S.stw.laps.length-1]:0;
+  b.textContent=swF(e);document.getElementById('sw-cur').textContent=swF(e-last);
+}
+function swDraw(){
+  var w=S.stw,g=document.getElementById('sw-go');if(!g)return;
+  g.textContent=w.run?'Pause':(w.acc>0?'Resume':'Start');
+  document.getElementById('sw-lapb').disabled=!w.run;
+  document.getElementById('sw-n').textContent=w.laps.length+1;
+  var tm=swTimes(),n=tm.length,sum=tm.reduce(function(a,b){return a+b},0),mi=n*TRACK;
+  var best=n?Math.min.apply(null,tm):0,worst=n?Math.max.apply(null,tm):0,avg=n?sum/n:0;
+  var pace=function(ms){return (TRACK/(ms/3600000)).toFixed(1)};
+  document.getElementById('sw-sum').innerHTML=
+    '<div><dt>Laps</dt><dd>'+n+'</dd></div><div><dt>Miles</dt><dd>'+mi.toFixed(2)+'</dd></div>'+
+    '<div><dt>Avg lap</dt><dd>'+(n?swF(avg):'--')+'</dd></div><div><dt>Best lap</dt><dd>'+(n?swF(best):'--')+'</dd></div>'+
+    '<div><dt>Avg pace</dt><dd>'+(n?pace(avg)+' mph':'--')+'</dd></div><div><dt>Last lap</dt><dd>'+(n?pace(tm[n-1])+' mph':'--')+'</dd></div>';
+  var h='';
+  for(var i=n-1;i>=0;i--){
+    var d=tm[i],df=d-avg,tag=n>1&&d===best?' best':(n>1&&d===worst?' slow':'');
+    h+='<li class="'+tag.trim()+'"><span class="ln">'+(i+1)+'</span><span class="lt">'+swF(d)+'</span><span class="lp">'+pace(d)+' mph<small>'+(n>1?(df>=0?'+':'−')+Math.abs(df/1000).toFixed(1)+'s vs avg':'')+'</small></span><span class="ls">'+swF(S.stw.laps[i],false)+'</span></li>';
+  }
+  document.getElementById('sw-list').innerHTML=h;
+  swTick();
+}
+var SWT=null;
+function swLoop(){clearInterval(SWT);SWT=null;if(S.stw.run)SWT=setInterval(swTick,100)}
+function swGo(){
+  var w=S.stw;
+  if(w.run){w.acc+=Date.now()-w.start;w.run=false;if(!TR.run)trWake(false)}
+  else{w.start=Date.now();w.run=true;trWake(true)}
+  persist();swLoop();swDraw();
+}
+function swLap(){
+  var w=S.stw;if(!w.run)return;
+  var e=swEl(),last=w.laps.length?w.laps[w.laps.length-1]:0;
+  if(e-last<500)return;
+  w.laps.push(e);persist();swDraw();
+}
+function swReset(){
+  var w=S.stw;
+  if((w.laps.length||swEl()>0)&&!confirm('Reset the stopwatch and clear all laps?'))return;
+  w.run=false;w.start=0;w.acc=0;w.laps=[];if(!TR.run)trWake(false);persist();swLoop();swDraw();
+}
+function render(){renderHero();renderTabs();$('#view').innerHTML=({today:vToday,plan:vPlan,race:vRace,trainer:vTrainer,log:vLog})[tab]();if(tab==='trainer'){trRefresh();swDraw()}}
+document.addEventListener('click',function(e){
+  var b=e.target.closest('[data-act]');if(!b)return;
+  var a=b.dataset.act,id=b.dataset.id;
+  if(a==='tab'){tab=b.dataset.tab;focus=null;editing=null;render();window.scrollTo(0,0)}
+  else if(a==='focus'){focus=id;editing=null;tab='today';render();window.scrollTo(0,0)}
+  else if(a==='back'){focus=null;editing=null;render()}
+  else if(a==='edit'){editing=id;render()}
+  else if(a==='cancel'){editing=null;render()}
+  else if(a==='clear'){editing=null;mut(function(s){delete s.done[id]})}
+  else if(a==='blk'){var bi=b.dataset.i;if(S.rd[bi])delete S.rd[bi];else S.rd[bi]=1;persist();refreshRow(+bi)}
+  else if(a==='rdclear'){if(confirm('Clear all crossed-off blocks and logged actual miles?')){S.rd={};S.act={};persist();$('#race-dyn').innerHTML=raceDyn()}}
+  else if(a==='unit'){S.unit=b.dataset.val==='laps'?'laps':'mi';persist();$('#race-dyn').innerHTML=raceDyn()}
+  else if(a==='goal'){mut(function(s){s.goal=parseInt(b.dataset.val,10)})}
+  else if(a==='pace'){mut(function(s){s.pace=parseFloat(b.dataset.val)})}
+});
+document.addEventListener('submit',function(e){
+  var f=e.target.closest('form.log');if(!f)return;e.preventDefault();
+  var id=f.dataset.id,mi=parseFloat(f.elements.mi.value),mn=parseInt(f.elements.mn.value,10);
+  var dv=f.elements.dt.value,dd=parseISO(dv);
+  var an=f.elements.an.value||'ok',nt=f.elements.nt.value.trim().slice(0,200),err=f.querySelector('.err');
+  if(!dd||dd>today()){err.hidden=false;err.textContent='Pick the day you skated. It cannot be in the future.';return}
+  if(!(mi>0)||!(mn>0)||mi>200||mn>1500){err.hidden=false;err.textContent='Enter the distance and time you actually skated.';return}
+  editing=null;
+  mut(function(s){s.done[id]={mi:Math.round(mi*100)/100,mn:mn,an:an,nt:nt,dt:dv,ts:Date.now()}});
+});
+document.addEventListener('input',function(e){
+  if(e.target.id==='pace'){S.pace=parseFloat(e.target.value);$('#paceout').textContent=S.pace.toFixed(2)+' mph · '+pmile(S.pace)+'/mile';$('#race-dyn').innerHTML=raceDyn()}
+});
+document.addEventListener('change',function(e){
+  var t=e.target;
+  if(t.id==='pace'){persist()}
+  else if(t.dataset&&t.dataset.ai!==undefined){var ai=t.dataset.ai,raw=parseFloat(t.value);if(t.value.trim()===''||!(raw>=0)){delete S.act[ai]}else{S.act[ai]=Math.round((S.unit==='laps'?raw*TRACK:raw)*1000)/1000;S.rd[ai]=1}persist();refreshRow(+ai)}
+  else if(t.dataset&&t.dataset.kit!==undefined){var i=t.dataset.kit,on=t.checked;S.kit[i]=on?1:0;persist()}
+});
+document.addEventListener('toggle',function(e){var d=e.target;if(d&&d.dataset&&d.dataset.wk)openWk[d.dataset.wk]=d.open},true);
+
+var _r=render;
+function cyrb53(str,seed){seed=seed||0;var h1=0xdeadbeef^seed,h2=0x41c6ce57^seed;for(var i=0,ch;i<str.length;i++){ch=str.charCodeAt(i);h1=Math.imul(h1^ch,2654435761);h2=Math.imul(h2^ch,1597334677)}h1=Math.imul(h1^(h1>>>16),2246822507)^Math.imul(h2^(h2>>>13),3266489909);h2=Math.imul(h2^(h2>>>16),2246822507)^Math.imul(h1^(h1>>>13),3266489909);return (4294967296*(2097151&h2)+(h1>>>0)).toString(36)}
+var GATE_HASH='gcre1dgt8q';
+function openApp(){$('#gate').hidden=true;$('#app').hidden=false;render()}
+var gateOk=false;try{gateOk=localStorage.getItem('ultraskate-unlock')===GATE_HASH}catch(e){}
+if(gateOk)openApp();else{var gi=$('#gate-pw');if(gi)gi.focus()}
+$('#gate-form').addEventListener('submit',function(e){
+  e.preventDefault();
+  if(cyrb53($('#gate-pw').value)===GATE_HASH){try{localStorage.setItem('ultraskate-unlock',GATE_HASH)}catch(x){}openApp()}
+  else{var er=$('#gate-err');er.hidden=false;er.textContent='Wrong password.'}
+});
+})();
+</script>
+</body></html>
